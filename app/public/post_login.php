@@ -2,7 +2,7 @@
 
 //print_r($_POST);
 
-//валидацию написать
+$errors = [];
 
 $email = $_POST['email'];
 $password = $_POST['password'];
@@ -14,7 +14,6 @@ if (empty($password)) {
     $errors['password'] = 'Password is required';
 }
 
-$errors = [];
 
 if(empty($errors))
 {
@@ -24,14 +23,21 @@ if(empty($errors))
     $statement->execute(['email' => $email]);
     $data = $statement->fetch();
 
-    if(password_verify($password, $data['password']))
+    if ($data == 0)
     {
-        session_start();
-        $_SESSION['user_id'] = $data['id'];
-
-        header("Location: /main.php");
-    } else {
-        // если пользователь не найден или пароль неверный
-        $errors['login'] = 'Invalid email or password';
+        $errors['email'] = 'You are not registred';
+    } else
+    {
+        if(password_verify($password, $data['password']))
+        {
+            session_start();
+            $_SESSION['user_id'] = $data['id'];
+            header("Location: /main.php");
+        } else {
+            $errors['password'] = 'Invalid password';
+        }
     }
+
 }
+
+require_once './get_login.php';

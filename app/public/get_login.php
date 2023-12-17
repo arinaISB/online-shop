@@ -48,11 +48,14 @@
 
                     <div class="input-box">
                         <input type="email" name="email" placeholder="Email">
+                        <label style="color: red"><?php echo $errors['email'] ?? ''; ?></label>
                         <i class="fa fa-envelope"></i>
+
                     </div>
 
                     <div class="input-box">
                         <input type="password" name="password" placeholder="Password">
+                        <label style="color: red"><?php echo $errors['password'] ?? ''; ?></label>
                         <i class="fa fa-lock"></i>
                     </div>
 
