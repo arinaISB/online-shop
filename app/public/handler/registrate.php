@@ -42,18 +42,16 @@ if(empty($errors))
     $statement = $pdo->prepare("INSERT INTO users (name, email, password) VALUES (:name, :email, :password)");
     $statement->execute(['name' => $name, 'email' => $email, 'password' => $password]);
 
-    $statement = $pdo->prepare('SELECT * FROM users WHERE name = :name');
-    $statement->execute(['name' => $name]);
-    $data = $statement->fetch();
+    //после успешной регистрации перенаправляем на страницу авторизации
+    header("Location: /login");
 
-    echo "You are successfully registered";
+//    $statement = $pdo->prepare('SELECT * FROM users WHERE name = :name');
+//    $statement->execute(['name' => $name]);
+//    $data = $statement->fetch();
+//
+//    echo "{$data['name']} is successfully registered";
 
-} //else
-//{
-//    foreach ($errors as $error) {
-//        echo $error . "<br>";
-//    }
-//}
+}
 
-require_once './get_registrate.php';
+require_once './html/registrate.php';
 ?>

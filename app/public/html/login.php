@@ -44,7 +44,7 @@
             <div class="circle"></div>
 
             <div class="card-inner login">
-                <form action="post_login.php" method="POST">
+                <form action="/login" method="POST">
 
                     <div class="input-box">
                         <input type="email" name="email" placeholder="Email">

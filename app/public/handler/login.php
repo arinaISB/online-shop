@@ -23,21 +23,22 @@ if(empty($errors))
     $statement->execute(['email' => $email]);
     $data = $statement->fetch();
 
-    if ($data == 0)
+    if (empty($data))
     {
-        $errors['email'] = 'You are not registred';
+        $errors['email'] = 'You are not registered';
     } else
     {
         if(password_verify($password, $data['password']))
         {
+            //setcookie('user_id', $data['id']);  небезопасно!
             session_start();
             $_SESSION['user_id'] = $data['id'];
-            header("Location: /main.php");
+            header("Location: /main");
         } else {
-            $errors['password'] = 'Invalid password';
+            $errors['password'] = 'Invalid password or email';
         }
     }
 
 }
 
-require_once './get_login.php';
+require_once './html/login.php';
