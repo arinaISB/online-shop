@@ -20,6 +20,11 @@
         <?php endforeach; ?>
     </div>
 </div>
+<div class="logout ">
+    <form action="/logout" method="post">
+        <button type="submit">Log out</button>
+    </form>
+</div>
 
 <style>
     body {

@@ -37,9 +37,7 @@ class UserController
             //    $data = $statement->fetch();
             //
             //    echo "{$data['name']} is successfully registered";
-
         }
-
         require_once './../View/registration.php';
     }
 
@@ -78,8 +76,12 @@ class UserController
         {
             $errors['psw-repeat'] = "Password and repeat password do not match";
         }
-
         return $errors;
+    }
+
+    public function getLogin(): void
+    {
+        require_once './../View/login.php';
     }
 
     public function login(): void
@@ -110,9 +112,7 @@ class UserController
                     $errors['password'] = 'Invalid password or email';
                 }
             }
-
         }
-
         require_once './../View/login.php';
     }
 
@@ -131,22 +131,18 @@ class UserController
         if (empty($password)) {
             $errors['password'] = 'Password is required';
         }
-
         return $errors;
     }
 
-    public function getLogin(): void
+    public function getLogout()
     {
-        require_once './../View/login.php';
+        require_once './../View/main.php';
     }
-
     public function logout(): void
     {
         if (session_status() === PHP_SESSION_ACTIVE) {
             session_destroy();
         }
         header("Location: /login");
-
-        //require_once '';
     }
 }

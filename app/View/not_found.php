@@ -32,7 +32,7 @@
 
 <style>
     #oopss {
-        background: linear-gradient(-45deg, #489b2c, #348725);
+        background: linear-gradient(-45deg, #04aa6d, #04aa6d);
         position: fixed;
         left: 0px;
         top: 0;
@@ -75,7 +75,7 @@
         margin: 2em auto 0;
         padding: .7em 2em;
         border-radius: 500px;
-        box-shadow: 0 20px 70px 4px rgba(0, 0, 0, 0.1), inset 7px 33px 0 0px #fff300;
+        box-shadow: 0 20px 70px 4px rgba(0, 0, 0, 0.1), inset 7px 33px 0 0px #cddad6;
         font-weight: 900;
         transition: all 300ms ease;
     }
