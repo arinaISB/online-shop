@@ -33,8 +33,6 @@ if ($requestUri === '/registration') {
     }
 } elseif ($requestUri === '/logout') {
     if ($requestMethod === 'GET') {
-        $userController->getLogout();
-    } elseif ($requestMethod === 'POST') {
         $userController->logout();
     } else {
         echo "Метод $requestMethod не поддерживается для $requestUri";

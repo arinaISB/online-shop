@@ -1,14 +1,15 @@
 <?php
 
+require_once './../Model/User.php';
+
 class UserController
 {
-    private PDO $pdo;
+    private User $modelUser;
 
     public function __construct()
     {
-        $this->pdo = new PDO("pgsql:host=db;port=5432;dbname=postgres", "dbuser", "dbpwd");
+        $this->modelUser = new User();
     }
-
     public function getRegistration(): void
     {
         require_once './../View/registration.php';
@@ -18,33 +19,22 @@ class UserController
     {
         $errors = $this->validateRegistrationForm($_POST);
 
-        if(empty($errors))
-        {
-            $password = $_POST['password'];
+        if(empty($errors)) {
             $name = $_POST['name'];
             $email = $_POST['email'];
+            $password = $_POST['psw'];
 
-            $password = password_hash($password, PASSWORD_DEFAULT);
+            $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
-            $statement = $this->pdo->prepare("INSERT INTO users (name, email, password) VALUES (:name, :email, :password)");
-            $statement->execute(['name' => $name, 'email' => $email, 'password' => $password]);
+            $this->modelUser->addUser($email, $name, $hashedPassword);
 
-            //после успешной регистрации перенаправляем на страницу авторизации
             header("Location: /login");
-
-            //    $statement = $pdo->prepare('SELECT * FROM users WHERE name = :name');
-            //    $statement->execute(['name' => $name]);
-            //    $data = $statement->fetch();
-            //
-            //    echo "{$data['name']} is successfully registered";
         }
         require_once './../View/registration.php';
     }
 
     private function validateRegistrationForm(array $data): array
     {
-        //print_r($_POST);
-
         $errors = [];
 
         $name = $data['name'];
@@ -57,10 +47,18 @@ class UserController
         }
 
         $email = $data['email'];
+
         if (!filter_var($email, FILTER_VALIDATE_EMAIL))
         {
             $errors['email'] = "Email is invalid";
-        }
+        } else
+            {
+                $existingUser = $this->modelUser->getOneByEmail($email);
+                if ($existingUser) {
+                    $errors['email'] = "Email already exists";
+                }
+            }
+
 
         $password = $data['psw'];
         $repeatPassword = $data['psw-repeat'];
@@ -88,29 +86,16 @@ class UserController
     {
         $errors = $this->validateLoginForm($_POST);
 
-        $password = $_POST['password'];
-        $email = $_POST['email'];
-
         if(empty($errors))
         {
-            $statement = $this->pdo->prepare(query: "SELECT * FROM users WHERE email = :email");
-            $statement->execute(['email' => $email]);
-            $data = $statement->fetch();
-
-            if (empty($data))
-            {
-                $errors['email'] = 'You are not registered';
-            } else
-            {
-                if(password_verify($password, $data['password']))
-                {
-                    //setcookie('user_id', $data['id']);  небезопасно!
-                    session_start();
-                    $_SESSION['user_id'] = $data['id'];
-                    header("Location: /main");
-                } else {
-                    $errors['password'] = 'Invalid password or email';
-                }
+            $password = $_POST['password'];
+            $email = $_POST['email'];
+            $user = $this->modelUser->getOneByEmail($email);
+            //setcookie('user_id', $data['id']);  небезопасно!
+            if ($user) {
+                session_start();
+                $_SESSION['user_id'] = $user['id'];
+                header("Location: /main");
             }
         }
         require_once './../View/login.php';
@@ -118,26 +103,28 @@ class UserController
 
     private function validateLoginForm(array $data): array
     {
-        //print_r($_POST);
+        $password = $data['password'];
+        $email = $data['email'];
+
+        $user = $this->modelUser->getOneByEmail($email);
 
         $errors = [];
 
-        $email = $data['email'];
-        $password = $data['password'];
-
         if (empty($email)) {
             $errors['email'] = 'Email is required';
-        }
-        if (empty($password)) {
+        } elseif (empty($password)) {
             $errors['password'] = 'Password is required';
+        } elseif (empty($data)) {
+            $errors['email'] = 'You are not registered';
+        } else {
+            if (!password_verify($password, $user['password'])) {
+                $errors['password'] = 'Invalid password or email';
+            }
         }
+
         return $errors;
     }
 
-    public function getLogout()
-    {
-        require_once './../View/main.php';
-    }
     public function logout(): void
     {
         if (session_status() === PHP_SESSION_ACTIVE) {
