@@ -127,7 +127,7 @@
     .circle {
         width: 350px;
         height: 70px;
-        background: radial-gradient(#b0e633, #53ef7d);
+        background: radial-gradient(#04aa6d, #53ef7d);
         border-radius: 8px;
         position: absolute;
         animation: move-up6 2s ease-in infinite alternate-reverse;

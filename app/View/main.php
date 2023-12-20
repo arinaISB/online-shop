@@ -31,8 +31,36 @@
         font-style: sans-serif;
     }
 
+    .container {
+        padding: 20px;
+    }
+
+    .card-text {
+        margin-bottom: 10px;
+        text-align: center;
+    }
+
+    .card-footer {
+        text-align: center;
+        margin-top: 10px;
+    }
+
     a {
         text-decoration: none;
+    }
+
+    .card-header a {
+        color: inherit;
+    }
+
+    .card-header a:hover {
+        text-decoration: underline;
+    }
+
+    .card-img-top {
+        width: 100%;
+        height: auto;
+        object-fit: cover;
     }
 
     a:hover {
