@@ -1,8 +1,15 @@
 <?php
 
-require_once './../Controller/UserController.php';
-require_once './../Controller/MainController.php';
+//require_once './../Controller/UserController.php';
+//require_once './../Controller/MainController.php';
 
+$x = function (string $className)
+{
+    echo $className;
+    die;
+};
+
+spl_autoload_register($x);
 $requestUri = $_SERVER['REQUEST_URI'];
 $requestMethod = $_SERVER['REQUEST_METHOD'];
 

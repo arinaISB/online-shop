@@ -1,14 +1,7 @@
 <?php
 
-class Product
+class Product extends Model
 {
-    private Database $pdo;
-
-    public function __construct()
-    {
-        $db = new Database();
-        $this->pdo = $db->getConnection();
-    }
 
     public function getAll(): array
     {

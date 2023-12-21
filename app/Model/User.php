@@ -1,17 +1,7 @@
 <?php
 
-require_once './../Model/Database.php';
-
-class User
+class User extends Model
 {
-    private Database $pdo;
-
-    public function __construct()
-    {
-        $db = new Database();
-        $this->pdo = $db->getConnection();
-    }
-
     public function getOneByEmail(string $email): array | false
     {
         $statement = $this->pdo->prepare("SELECT * FROM users WHERE email = :email");
