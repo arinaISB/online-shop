@@ -24,7 +24,7 @@ class App
             ],
             'POST' => [
                 'class' => UserController::class,
-                'method' => 'registration'
+                'method' => 'login'
             ]
         ],
         '/main' => [
