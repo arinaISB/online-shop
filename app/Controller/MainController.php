@@ -3,6 +3,7 @@
 namespace Controller;
 
 use Model\Product;
+use PDO;
 
 class MainController
 {
