@@ -1,46 +1,51 @@
 <?php
 
+use Controller\MainController;
+use Controller\UserController;
+
 class App
 {
     private array $routes = [
         '/registration' => [
             'GET' => [
-                'class' => 'UserController',
+                'class' => UserController::class,
                 'method' => 'getRegistration'
             ],
             'POST' => [
-                'class' => 'UserController',
+                'class' => UserController::class,
                 'method' => 'registration'
             ]
         ],
 
         '/login' => [
             'GET' => [
-                'class' => 'UserController',
+                'class' => UserController::class,
                 'method' => 'getLogin'
             ],
             'POST' => [
-                'class' => 'UserController',
+                'class' => UserController::class,
                 'method' => 'registration'
             ]
         ],
         '/main' => [
             'GET' => [
-                'class' => 'MainController',
+                'class' => MainController::class,
                 'method' => 'getProducts'
             ]
         ],
         '/logout' => [
             'GET' => [
-                'class' => 'UserController',
+                'class' => UserController::class,
                 'method' => 'logout'
             ]
         ]
     ];
 
-    public function run()
+    public function run(): void
     {
         $requestUri = $_SERVER['REQUEST_URI'];
+
+        $obj = new Controller\UserController();//теперь обращаемся к классу с указанием namespace
 
         if (isset($this->routes[$requestUri])) {
             $requestMethod = $_SERVER['REQUEST_METHOD'];

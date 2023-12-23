@@ -1,5 +1,7 @@
 <?php
 
+namespace Model;
+
 class User extends Model
 {
     public function getOneByEmail(string $email): array | false
