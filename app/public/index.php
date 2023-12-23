@@ -22,43 +22,21 @@ $modelAutoloader = function (string $className)
     return false;
 };
 
+$appAutoloader = function (string $className)
+{
+    if (file_exists("./../$className.php"))
+    {
+        require_once "./../$className.php";
+        return true;
+    }
+
+    return false;
+};
+
+
 spl_autoload_register($controllerAutoloader);
 spl_autoload_register($modelAutoloader);
+spl_autoload_register($appAutoloader);
 
-$requestUri = $_SERVER['REQUEST_URI'];
-$requestMethod = $_SERVER['REQUEST_METHOD'];
-
-$userController = new UserController();
-$mainController = new MainController();
-
-if ($requestUri === '/registration') {
-    if ($requestMethod === 'GET') {
-        $userController->getRegistration();
-    } elseif ($requestMethod === 'POST') {
-        $userController->registration();
-    } else {
-        echo "Метод $requestMethod не поддерживается для $requestUri";
-    }
-} elseif ($requestUri === '/login') {
-    if ($requestMethod === 'GET') {
-        $userController->getLogin();
-    } elseif ($requestMethod === 'POST') {
-        $userController->Login();
-    } else {
-        echo "Метод $requestMethod не поддерживается для $requestUri";
-    }
-} elseif ($requestUri === '/main') {
-    if ($requestMethod === 'GET') {
-        $mainController->getProducts();
-    } else {
-        echo "Метод $requestMethod не поддерживается для $requestUri";
-    }
-} elseif ($requestUri === '/logout') {
-    if ($requestMethod === 'GET') {
-        $userController->logout();
-    } else {
-        echo "Метод $requestMethod не поддерживается для $requestUri";
-    }
-} else {
-    require_once './../View/not_found.php';
-}
+$app = new App();
+$app->run();

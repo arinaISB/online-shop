@@ -18,6 +18,8 @@ services:
     volumes:
       - ./docker/php/xdebug.ini:/usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
       - .:/var/www/html
+    env_file:
+      - .env
 
   db:
     image: postgres:13.1
