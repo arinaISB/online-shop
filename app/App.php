@@ -34,7 +34,7 @@ class App
             ]
         ],
         '/logout' => [
-            'GET' => [
+            'POST' => [
                 'class' => UserController::class,
                 'method' => 'logout'
             ]
