@@ -12,10 +12,4 @@ class User extends Model
 
         return $result;
     }
-
-    public function addUser(string $email, string $name, string $password): void
-    {
-        $statement = $this->pdo->prepare("INSERT INTO users (name, email, password) VALUES (:name, :email, :password)");
-        $statement->execute(['name' => $name, 'email' => $email, 'password' => $password]);
-    }
 }

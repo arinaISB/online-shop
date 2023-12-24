@@ -38,6 +38,17 @@ class App
                 'class' => UserController::class,
                 'method' => 'logout'
             ]
+        ],
+
+        '/add-product' => [
+            'GET' => [
+                'class' => MainController::class,
+                'method' => 'getAddProductForm'
+            ],
+            'POST' => [
+                'class' => MainController::class,
+                'method' => 'addProduct'
+            ]
         ]
     ];
 
