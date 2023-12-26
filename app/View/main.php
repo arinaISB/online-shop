@@ -1,12 +1,12 @@
 <div class="container">
-    <h3>Catalog</h3>
+    <h3>Каталог</h3>
     <div class="card-deck">
         <?php foreach ($products as $product): ?>
         <div class="card text-center">
             <a href="#">
-                <div class="card-header">
+                <!--<div class="card-header">
                     Hit!
-                </div>
+                </div> -->
                 <img class="card-img-top" src="<?php echo $product['link']; ?>" alt="Card image">
                 <div class="card-body">
                     <p class="card-text text-muted"><?php echo $product['name']; ?></p>
@@ -14,15 +14,25 @@
                     <div class="card-footer">
                         <?php echo $product['price']; ?> ₽
                     </div>
+                    <div class="add">
+                        <form action="/add-product" method="post">
+                            <input type="hidden" name="product_id" value="<?php echo $product['id']; ?>">
+                            <input type="hidden" name="quantity" value="1">
+                            <button type="submit">Добавить в корзину</button>
+                        </form>
+                    </div>
                 </div>
             </a>
         </div>
         <?php endforeach; ?>
     </div>
+    <div class="checkout">
+        <a href="/placeOrder" class="checkout-button">Оформить заказ</a>
+    </div>
 </div>
-<div class="logout ">
+<div class="logout">
     <form action="/logout" method="post">
-        <button type="submit">Log out</button>
+        <button type="submit" class="logout-button">Выйти</button>
     </form>
 </div>
 
@@ -94,5 +104,42 @@
         font-weight: bold;
         font-size: 18px;
         background-color: white;
+    }
+
+    .logout {
+        text-align: left;
+        margin-top: 20px;
+    }
+
+    .logout-button {
+        background-color: #04aa6d;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        font-size: 16px;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    .logout-button:hover {
+        background-color: #53ef7d;
+    }
+
+    .checkout-button {
+        display: inline-block;
+        background-color: #04aa6d;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        font-size: 16px;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+        text-decoration: none;
+    }
+
+    .checkout-button:hover {
+        background-color: #53ef7d;
     }
 </style>
