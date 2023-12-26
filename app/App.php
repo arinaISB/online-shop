@@ -1,5 +1,6 @@
 <?php
 
+use Controller\CartController;
 use Controller\MainController;
 use Controller\UserController;
 
@@ -42,11 +43,11 @@ class App
 
         '/add-product' => [
             'GET' => [
-                'class' => MainController::class,
+                'class' => CartController::class,
                 'method' => 'getAddProductForm'
             ],
             'POST' => [
-                'class' => MainController::class,
+                'class' => CartController::class,
                 'method' => 'addProduct'
             ]
         ]
@@ -56,7 +57,7 @@ class App
     {
         $requestUri = $_SERVER['REQUEST_URI'];
 
-        $obj = new Controller\UserController();//теперь обращаемся к классу с указанием namespace
+//        $obj = new Controller\UserController();//теперь обращаемся к классу с указанием namespace
 
         if (isset($this->routes[$requestUri])) {
             $requestMethod = $_SERVER['REQUEST_METHOD'];
