@@ -1,5 +1,5 @@
 <div class="container">
-    <h3>Каталог</h3>
+    <h3>Catalog</h3>
     <div class="card-deck">
         <?php foreach ($products as $product): ?>
         <div class="card text-center">
@@ -17,8 +17,8 @@
                     <div class="add">
                         <form action="/add-product" method="post">
                             <input type="hidden" name="product_id" value="<?php echo $product['id']; ?>">
-                            <input type="hidden" name="quantity" value="1">
-                            <button type="submit">Добавить в корзину</button>
+                            <input type="number" name="quantity" value="1" min="1">
+                            <input type="submit" name="add_to_cart" value="Add to cart">
                         </form>
                     </div>
                 </div>
@@ -27,12 +27,14 @@
         <?php endforeach; ?>
     </div>
     <div class="checkout">
-        <a href="/placeOrder" class="checkout-button">Оформить заказ</a>
+        <form action="/placeOrder" method="post">
+            <a href="/placeOrder" class="checkout-button">Place order</a>
+        </form>
     </div>
 </div>
 <div class="logout">
     <form action="/logout" method="post">
-        <button type="submit" class="logout-button">Выйти</button>
+        <button type="submit" class="logout-button">Log out</button>
     </form>
 </div>
 
@@ -141,5 +143,9 @@
 
     .checkout-button:hover {
         background-color: #53ef7d;
+    }
+
+    .add-more-button {
+        display: none;
     }
 </style>

@@ -4,24 +4,29 @@ namespace Model;
 
 class Cart extends Model
 {
-    public function getCart(int $userId)
+    public function createCart(int $userId)
     {
-//        $existingStatement = $this->pdo->prepare("SELECT id FROM carts WHERE name = :name");
-//        $existingStatement->execute(['name' => $name]);
-//        $cart = $existingStatement->fetch();
-//
-//        if (empty($cart)) {
-//            $insertStatement = $this->pdo->prepare("INSERT INTO carts (name, user_id) VALUES (:name, :user_id)");
-//            $insertStatement->execute(['name' => $name, 'user_id' => $userId]);
-//
-//            return $this->pdo->lastInsertId();
-//        } else {
-//            return $cart['id'];
-//        }
+        $statement = $this->pdo->prepare("INSERT INTO carts (user_id) VALUES (:user_id)");
+        $newCart = $statement->execute(['user_id' => $userId]);
 
-        $insertStatement = $this->pdo->prepare("INSERT INTO carts (user_id) VALUES (:user_id)");
-        $insertStatement->execute(['user_id' => $userId]);
+        return $newCart;
+    }
 
-        return $this->pdo->lastInsertId();
+    public function getCartId(int $userId)
+    {
+        $statement = $this->pdo->prepare("SELECT id FROM carts WHERE user_id = :user_id");
+        $statement->execute(['user_id' => $userId]);
+        $result = $statement->fetch();
+
+        return $result !== false ? $result['id'] : null;
+    }
+
+    public function isCartExist(int $userId)
+    {
+        $statement = $this->pdo->prepare("SELECT * FROM carts WHERE user_id = :user_id");
+        $statement->execute(['user_id' => $userId]);
+        $result = $statement->fetch();
+
+        return !empty($result);
     }
 }

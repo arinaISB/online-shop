@@ -37,21 +37,37 @@ class CartController
             $productId = $data['product_id'];
             $quantity = $data['quantity'];
 
-            $cartId = $this->cartModel->getCart($userId);
-            $cartProduct = $this->cartProductModel->addCartProducts($cartId, $productId, $quantity);
+            if ($this->cartModel->isCartExist($userId)) {
+                $cartId = $this->cartModel->getCartId($userId);
+
+                if ($this->cartProductModel->isProductInCart($cartId, $productId)) {
+                    $currentQuantity = $this->cartProductModel->getProductQuantity($cartId, $productId);
+                    $newQuantity = $currentQuantity + $quantity;
+                    $this->cartProductModel->updateProductQuantity($cartId, $productId, $newQuantity);
+                } else {
+                    $this->cartProductModel->addCartProduct($cartId, $productId, $quantity);
+                }
+            } else {
+                $this->cartModel->createCart($userId);
+                $cartId = $this->cartModel->getCartId($userId);
+                $this->cartProductModel->addCartProducts($cartId, $productId, $quantity);
+            }
 
             header("Location: /main");
         }
     }
 
-    public function myCart()
-    {
-        session_start();
-        if (!isset($_SESSION['user_id']))
-        {
-            header("Location: /login");
-        } else {
-            require_once './../View/main.php';
-        }
-    }
+
+//сделать страничку корзины
+//    public function myCart()
+//    {
+//        session_start();
+//        if (!isset($_SESSION['user_id']))
+//        {
+//            header("Location: /login");
+//        } else {
+//            require_once './../View/main.php';
+//        }
+//    }
+
 }
