@@ -1,6 +1,7 @@
 <?php
 
 use Controller\CartController;
+use Controller\CartProductController;
 use Controller\CheckoutController;
 use Controller\MainController;
 use Controller\UserController;
@@ -44,11 +45,11 @@ class App
 
         '/add-product' => [
             'GET' => [
-                'class' => CartController::class,
+                'class' => CartProductController::class,
                 'method' => 'getAddProductForm'
             ],
             'POST' => [
-                'class' => CartController::class,
+                'class' => CartProductController::class,
                 'method' => 'addProduct'
             ]
         ],
