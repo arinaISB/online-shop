@@ -4,7 +4,7 @@ namespace Model;
 
 class CartProduct extends Model
 {
-    public function addCartProducts(int $cartId, int $productId, int $quantity)
+    public function addCartProducts(int $cartId, int $productId, int $quantity): bool
     {
         $statement = $this->pdo->prepare("INSERT INTO cart_products (cart_id, product_id, quantity) VALUES (:cart_id, :product_id, :quantity)");
         $newCartProduct = $statement->execute(['cart_id' => $cartId, 'product_id' => $productId, 'quantity' => $quantity]);
@@ -12,7 +12,7 @@ class CartProduct extends Model
         return $newCartProduct;
     }
 
-    public function isProductInCart(int $cartId, int $productId)
+    public function isProductInCart(int $cartId, int $productId): bool
     {
         $statement = $this->pdo->prepare("SELECT COUNT(*) FROM cart_products WHERE cart_id = :cart_id AND product_id = :product_id");
         $statement->execute(['cart_id' => $cartId, 'product_id' => $productId]);
@@ -27,10 +27,10 @@ class CartProduct extends Model
         $statement->execute(['cart_id' => $cartId, 'product_id' => $productId]);
         $result = $statement->fetchColumn();
 
-        return $result !== false ? $result : 0;
+        return (int)$result;
     }
 
-    public function updateProductQuantity($cartId, $productId, $newQuantity)
+    public function updateProductQuantity($cartId, $productId, $newQuantity): bool
     {
         $statement = $this->pdo->prepare("UPDATE cart_products SET quantity = :quantity WHERE cart_id = :cart_id AND  product_id = :product_id");
         $updateCartProduct = $statement->execute(['cart_id' => $cartId, 'product_id' => $productId, 'quantity' => $newQuantity]);
@@ -38,10 +38,21 @@ class CartProduct extends Model
         return $updateCartProduct;
     }
 
-    public function addCartProduct(int $cartId, int $productId, int $quantity)
+    public function addCartProduct(int $cartId, int $productId, int $quantity): bool
     {
         $statement = $this->pdo->prepare("INSERT INTO cart_products (cart_id, product_id, quantity) VALUES (:cart_id, :product_id, :quantity)");
         $newCartProduct = $statement->execute(['cart_id' => $cartId, 'product_id' => $productId, 'quantity' => $quantity]);
 
         return $newCartProduct;
-    }}
+    }
+
+    public function getProductsInCart(int $cartId)
+    {
+        $statement = $this->pdo->prepare("SELECT * FROM cart_products WHERE cart_id = :cart_id");
+        $statement->execute(['cart_id' => $cartId]);
+        $productsInCart = $statement->fetchAll();
+
+        return $productsInCart;
+    }
+
+}

@@ -18,7 +18,7 @@ class Cart extends Model
         $statement->execute(['user_id' => $userId]);
         $result = $statement->fetch();
 
-        return $result !== false ? $result['id'] : null;
+        return !empty($result);
     }
 
     public function isCartExist(int $userId)

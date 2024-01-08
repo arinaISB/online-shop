@@ -62,6 +62,17 @@ class App
                 'class' => CheckoutController::class,
                 'method' => 'getPlaceOrderForm'
             ]
+        ],
+
+        '/cart' => [
+            'GET' => [
+                'class' => CartController::class,
+                'method' => 'getCartForm'
+            ],
+            'POST' => [
+                'class' => CartController::class,
+                'method' => 'getCartForm'
+            ]
         ]
     ];
 

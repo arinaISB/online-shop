@@ -26,9 +26,14 @@
         </div>
         <?php endforeach; ?>
     </div>
-    <div class="checkout">
+    <div class="placeOrder">
         <form action="/placeOrder" method="post">
             <a href="/placeOrder" class="checkout-button">Place order</a>
+        </form>
+    </div>
+    <div class="cart">
+        <form action="/cart" method="post">
+            <a href="/cart" class="checkout-button">Cart</a>
         </form>
     </div>
 </div>
