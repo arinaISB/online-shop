@@ -2,8 +2,8 @@
 
 use Controller\CartController;
 use Controller\CartProductController;
-use Controller\CheckoutController;
 use Controller\MainController;
+use Controller\PlaceOrderController;
 use Controller\UserController;
 
 class App
@@ -56,12 +56,12 @@ class App
 
         '/placeOrder' => [
             'GET' => [
-                'class' => CheckoutController::class,
+                'class' => PlaceOrderController::class,
                 'method' => 'getPlaceOrderForm'
             ],
             'POST' => [
-                'class' => CheckoutController::class,
-                'method' => 'getPlaceOrderForm'
+                'class' => PlaceOrderController::class,
+                'method' => 'placeOrderForm'
             ]
         ],
 
@@ -69,11 +69,11 @@ class App
             'GET' => [
                 'class' => CartController::class,
                 'method' => 'getCartForm'
-            ],
-            'POST' => [
-                'class' => CartController::class,
-                'method' => 'getCartForm'
             ]
+//            'POST' => [
+//                'class' => CartController::class,
+//                'method' => 'getCartForm'
+//            ]
         ]
     ];
 

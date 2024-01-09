@@ -12,7 +12,7 @@ class Product extends Model
         return $products;
     }
 
-    public function getProductLink($id)
+    public function getProductLink(int $id)
     {
         $statement = $this->pdo->prepare("SELECT link FROM products WHERE id = :id");
         $statement->execute(['id' => $id]);
@@ -21,7 +21,7 @@ class Product extends Model
         return $productLink;
     }
 
-    public function getProductName($id)
+    public function getProductName(int $id)
     {
         $statement = $this->pdo->prepare("SELECT name FROM products WHERE id = :id");
         $statement->execute(['id' => $id]);
@@ -30,7 +30,7 @@ class Product extends Model
         return $productName;
     }
 
-    public function getProductPrice($id)
+    public function getProductPrice(int $id)
     {
         $statement = $this->pdo->prepare("SELECT price FROM products WHERE id = :id");
         $statement->execute(['id' => $id]);
@@ -38,5 +38,4 @@ class Product extends Model
 
         return $productPrice;
     }
-
 }

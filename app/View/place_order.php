@@ -5,7 +5,7 @@
 <main>
 
     <section class="checkout-form">
-        <form action="#!" method="get">
+        <form action="/placeOrder" method="POST">
             <h6>Contact information</h6>
             <div class="form-control">
                 <label for="checkout-email">E-mail</label>
@@ -80,35 +80,22 @@
     <section class="checkout-details">
         <div class="checkout-details-inner">
             <div class="checkout-lists">
-                <div class="card">
-                    <div class="card-image"><img src="https://rvs-checkout-page.onrender.com/photo1.png" alt=""></div>
-                    <div class="card-details">
-                        <div class="card-name">Vintage Backbag</div>
-                        <div class="card-price">$54.99</div>
-                        <div class="card-wheel">
-                            <button>-</button>
-                            <span>1</span>
-                            <button>+</button>
-                        </div>
-                    </div>
-                </div>
-                <div class="card">
-                    <div class="card-image"><img src="https://rvs-checkout-page.onrender.com/photo2.png" alt=""></div>
-                    <div class="card-details">
-                        <div class="card-name">Levi Shoes</div>
-                        <div class="card-price">$74.99</div>
-                        <div class="card-wheel">
-                            <button>-</button>
-                            <span>1</span>
-                            <button>+</button>
-                        </div>
-                    </div>
-                </div>
+                <?php foreach ($productsInCart as $index => $productInCart): ?>
+
+                    <tr class="productitm">
+                        <td><img src="<?php echo $productLinks[$index]['link'];?>" width="100" height="100"><br></td>
+                        <td>Количество: <?php echo $productQuantity[$index]['quantity'];?><br></td>
+                        <td><?php echo $productNames[$index]['name'];?><br></td>
+                        <td><?php echo number_format($productLineTotal[$index]['lineTotal'], 0, ',', ' '); ?>₽<br></td>
+                    </tr>
+
+                <?php endforeach;?>
             </div>
-            <div class="checkout-total">
-                <h6>Total</h6>
-                <p>$148.98</p>
-            </div>
+            <tr class="totalprice">
+                <td class="light">Total:</td>
+                <td colspan="2">&nbsp;</td>
+                <td colspan="2"><?php echo number_format($totalPrice, 0, ',', ' '); ?>₽</span></td>
+            </tr>
         </div>
     </section>
 

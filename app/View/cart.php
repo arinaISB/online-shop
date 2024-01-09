@@ -20,10 +20,18 @@
 
                 <tr class="productitm">
                     <td><img src="<?php echo $productLinks[$index]['link'];?>"></td>
-                    <td><input type="number" value="<?php echo $productQuantity[$index]['quantity'];?>" min="0" max="99" class="qtyinput"></td>
+                    <td><input type="number" value="<?php echo $productQuantity[$index]['quantity'];?>" min="1" max="99" class="qtyinput"></td>
                     <td><?php echo $productNames[$index]['name'];?></td>
                     <td><?php echo number_format($productLineTotal[$index]['lineTotal'], 0, ',', ' '); ?>₽</td>
-                    <td><span class="remove"><img src="https://i.imgur.com/h1ldGRr.png" alt="X"></span></td>
+                    <td>
+<!--                        <form method="POST" action="./../Controller/CartController.php">-->
+<!--                            <input type="hidden" name="product_id" value="--><?php //echo $productInCart['id']; ?><!--">-->
+<!--                            <button type="submit" name="delete_product" id="delete_btn">-->
+                                <span class="remove" for="delete_btn"><img src="https://i.imgur.com/h1ldGRr.png" alt="X"></span></span>
+<!--                            </button>-->
+<!--                        </form>-->
+
+                    </td>
                 </tr>
 
             <?php endforeach;?>

@@ -66,4 +66,21 @@ class CartController
             require_once './../View/cart.php';
         }
     }
+
+    public function deleteProduct(array $data)
+    {
+        session_start();
+        if (!isset($_SESSION['user_id'])) {
+            header("Location: /login");
+        } else {
+            if (isset($data['delete_product']))
+            {
+                $productId = $data['product_id'];
+                $delete = $this->cartProductModel->deleteProduct($productId);
+
+            }
+
+            require_once './../View/cart.php';
+        }
+    }
 }
