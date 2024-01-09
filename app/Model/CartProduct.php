@@ -55,10 +55,10 @@ class CartProduct extends Model
         return $productsInCart;
     }
 
-    public function deleteProduct(int $productId)
+    public function deleteProduct(int $cartId, int $productId)
     {
-        $statement = $this->pdo->prepare("DELETE FROM cart_products WHERE product_id = :product_id");
-        return $statement->execute(['id' => $productId]);
+        $statement = $this->pdo->prepare("DELETE FROM cart_products WHERE cart_id = :cart_id AND product_id = :product_id");
+        return $statement->execute(['cart_id' => $cartId, 'product_id' => $productId]);
     }
 
 }

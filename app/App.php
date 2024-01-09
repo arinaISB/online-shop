@@ -54,6 +54,13 @@ class App
             ]
         ],
 
+        '/delete-product' => [
+            'POST' => [
+                'class' => CartController::class,
+                'method' => 'deleteProduct'
+            ]
+        ],
+
         '/placeOrder' => [
             'GET' => [
                 'class' => PlaceOrderController::class,
@@ -70,10 +77,6 @@ class App
                 'class' => CartController::class,
                 'method' => 'getCartForm'
             ]
-//            'POST' => [
-//                'class' => CartController::class,
-//                'method' => 'getCartForm'
-//            ]
         ]
     ];
 

@@ -32,6 +32,41 @@ class PlaceOrderController
         {
             header("Location: /login");
         } else {
+
+            $userId = $_SESSION['user_id'];
+            $cartId = $this->cartModel->getCartId($userId);
+            $productsInCart = $this->cartProductModel->getProductsInCart($cartId);
+
+            $productLinks = [];
+            foreach ($productsInCart as $productInCart) {
+                $link = $this->productModel->getProductLink($productInCart['product_id']);
+                $productLinks[] = ['link' => $link];
+            }
+
+            $productNames = [];
+            foreach ($productsInCart as $productInCart) {
+                $name = $this->productModel->getProductName($productInCart['product_id']);
+                $productNames[] = ['name' => $name];
+            }
+
+            $productQuantity = [];
+            foreach ($productsInCart as $productInCart) {
+                $quantity = $this->cartProductModel->getProductQuantity($cartId, $productInCart['product_id']);
+                $productQuantity[] = ['quantity' => $quantity];
+            }
+
+            $productLineTotal = [];
+            foreach ($productsInCart as $productInCart) {
+                $price = $this->productModel->getProductPrice($productInCart['product_id']);
+                $lineTotal = $quantity * $price;
+                $productLineTotal[] = ['lineTotal' => $lineTotal];
+            }
+
+            $totalPrice = 0;
+            foreach ($productLineTotal as $item) {
+                $totalPrice += $item['lineTotal'];
+            }
+
             require_once './../View/place_order.php';
         }
     }
@@ -77,7 +112,6 @@ class PlaceOrderController
             foreach ($productLineTotal as $item) {
                 $totalPrice += $item['lineTotal'];
             }
-
 
             $email = $data['checkout-email'];
             $phone = $data['checkout-phone'];

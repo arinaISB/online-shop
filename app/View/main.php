@@ -3,7 +3,6 @@
     <div class="card-deck">
         <?php foreach ($products as $product): ?>
         <div class="card text-center">
-            <a href="#">
                 <!--<div class="card-header">
                     Hit!
                 </div> -->
@@ -22,7 +21,6 @@
                         </form>
                     </div>
                 </div>
-            </a>
         </div>
         <?php endforeach; ?>
     </div>

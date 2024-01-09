@@ -17,24 +17,22 @@
             <tbody>
             <!-- shopping cart contents -->
             <?php foreach ($productsInCart as $index => $productInCart): ?>
-
                 <tr class="productitm">
-                    <td><img src="<?php echo $productLinks[$index]['link'];?>"></td>
-                    <td><input type="number" value="<?php echo $productQuantity[$index]['quantity'];?>" min="1" max="99" class="qtyinput"></td>
-                    <td><?php echo $productNames[$index]['name'];?></td>
-                    <td><?php echo number_format($productLineTotal[$index]['lineTotal'], 0, ',', ' '); ?>₽</td>
-                    <td>
-<!--                        <form method="POST" action="./../Controller/CartController.php">-->
-<!--                            <input type="hidden" name="product_id" value="--><?php //echo $productInCart['id']; ?><!--">-->
-<!--                            <button type="submit" name="delete_product" id="delete_btn">-->
-                                <span class="remove" for="delete_btn"><img src="https://i.imgur.com/h1ldGRr.png" alt="X"></span></span>
-<!--                            </button>-->
-<!--                        </form>-->
-
-                    </td>
+                    <form action="/delete-product" method="POST">
+                        <td><img src="<?php echo $productLinks[$index]['link']; ?>"></td>
+                        <td><input type="number" value="<?php echo $productQuantity[$index]['quantity']; ?>" min="1" max="99" class="qtyinput"></td>
+                        <td><?php echo $productNames[$index]['name']; ?></td>
+                        <td><?php echo number_format($productLineTotal[$index]['lineTotal'], 0, ',', ' '); ?>₽</td>
+                        <td>
+                            <span class="remove">
+                                <button type="submit" class="delete-button" name="product_id" value="<?php echo $productInCart['product_id']; ?>">
+                                    <img src="https://i.imgur.com/h1ldGRr.png" alt="X">
+                                </button>
+                            </span>
+                        </td>
+                    </form>
                 </tr>
-
-            <?php endforeach;?>
+            <?php endforeach; ?>
 
 
             <tr class="totalprice">
