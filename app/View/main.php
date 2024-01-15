@@ -14,9 +14,11 @@
                         <?php echo $product['price']; ?> ₽
                     </div>
                     <div class="add">
-                        <form action="/add-product" method="post">
+                        <form action="/add-product" method="POST">
                             <input type="hidden" name="product_id" value="<?php echo $product['id']; ?>">
-                            <input type="number" name="quantity" value="1" min="1">
+                            <label>
+                                <input type="number" name="quantity" value="1" min="1">
+                            </label>
                             <input type="submit" name="add_to_cart" value="Add to cart">
                         </form>
                     </div>

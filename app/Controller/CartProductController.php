@@ -3,7 +3,6 @@
 namespace Controller;
 use Model\Cart;
 use Model\CartProduct;
-use Model\Product;
 
 class CartProductController
 {
@@ -53,7 +52,6 @@ class CartProductController
                 $cartId = $this->cartModel->getCartId($userId);
                 $this->cartProductModel->addCartProducts($cartId, $productId, $quantity);
             }
-
             header("Location: /main");
         }
     }

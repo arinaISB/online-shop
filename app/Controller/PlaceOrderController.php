@@ -5,7 +5,7 @@ namespace Controller;
 use Model\Cart;
 use Model\CartProduct;
 use Model\OrderedCart;
-use Model\PlaceOrder;
+use Model\PlacedOrder;
 use Model\Product;
 
 class PlaceOrderController
@@ -13,7 +13,7 @@ class PlaceOrderController
     private Cart $cartModel;
     private CartProduct $cartProductModel;
     private Product $productModel;
-    private PlaceOrder $placeOrder;
+    private PlacedOrder $placedOrder;
     private OrderedCart $orderedCart;
 
     public function __construct()
@@ -21,7 +21,7 @@ class PlaceOrderController
         $this->cartProductModel = new CartProduct();
         $this->cartModel = new Cart();
         $this->productModel = new Product();
-        $this->placeOrder = new PlaceOrder();
+        $this->placedOrder = new PlacedOrder();
         $this->orderedCart = new OrderedCart();
     }
 
@@ -83,6 +83,20 @@ class PlaceOrderController
             $cartId = $this->cartModel->getCartId($userId);
             $productsInCart = $this->cartProductModel->getProductsInCart($cartId);
 
+
+            $email = $data['checkout-email'];
+            $phone = $data['checkout-phone'];
+            $userName = $data['checkout-name'];
+            $address = $data['checkout-address'];
+            $city = $data['checkout-city'];
+            $country = $data['checkout-country'];
+            $postal = $data['checkout-postal'];
+
+            $productLinks = [];
+            $productNames = [];
+            $productQuantity = [];
+            $productLineTotal = [];
+
             $productLinks = [];
             foreach ($productsInCart as $productInCart) {
                 $link = $this->productModel->getProductLink($productInCart['product_id']);
@@ -113,17 +127,17 @@ class PlaceOrderController
                 $totalPrice += $item['lineTotal'];
             }
 
-            $email = $data['checkout-email'];
-            $phone = $data['checkout-phone'];
-            $name = $data['checkout-name'];
-            $address = $data['checkout-address'];
-            $city = $data['checkout-city'];
-            $country = $data['checkout-country'];
-            $postal = $data['checkout-postal'];
+            $placedOrderId = $this->placedOrder->addAndGetPlacedOrder($totalPrice, $email, $phone, $userName, $address, $city, $country, $postal);
 
-            $contactInfo = $this->placeOrder->addContactInfo($email, $phone, $name, $address, $city, $country, $postal);
+            foreach ($productsInCart as $productInCart) {
+                $productId = $productInCart['product_id'];
+                $quantity = $productInCart['quantity'];
 
-            $cartInfo = $this->orderedCart->addOrderedCart($cartId, $totalPrice);
+                $cartInfo = $this->orderedCart->addOrderedItems($placedOrderId, $cartId, $productId, $quantity);
+                $deleteProduct = $this->cartProductModel->deleteProduct($cartId, $productId);
+            }
+
+            header("Location: /main");
 
             require_once './../View/place_order.php';
         }
