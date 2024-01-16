@@ -7,28 +7,16 @@ class Product extends Model
     public function getAll(): array
     {
         $statement = $this->pdo->query("SELECT * FROM products");
-        $products = $statement->fetchAll();
-
-        return $products;
+        return $statement->fetchAll();
     }
 
-    public function getProductLink(int $id)
+    public function getProductInfo(int $id)
     {
-        $statement = $this->pdo->prepare("SELECT link FROM products WHERE id = :id");
+        $statement = $this->pdo->prepare("SELECT * FROM products WHERE id = :id");
         $statement->execute(['id' => $id]);
-        $productLink = $statement->fetchColumn();
-
-        return $productLink;
+        return $statement->fetch();
     }
 
-    public function getProductName(int $id)
-    {
-        $statement = $this->pdo->prepare("SELECT name FROM products WHERE id = :id");
-        $statement->execute(['id' => $id]);
-        $productName = $statement->fetchColumn();
-
-        return $productName;
-    }
 
     public function getProductPrice(int $id)
     {

@@ -80,15 +80,27 @@
     <section class="checkout-details">
         <div class="checkout-details-inner">
             <div class="checkout-lists">
-                <?php foreach ($productsInCart as $index => $productInCart): ?>
-
+                <?php
+                $totalPrice = 0;
+                ?>
+                <?php foreach ($productsInCart as $productInCart): ?>
+                <?php
+                    $productId = $productInCart['product_id'];
+                    $productInfo = $this->productModel->getProductInfo($productId);
+                    $productQuantity = $productInCart['quantity'];
+                    $productLineTotal = $productQuantity * $productInfo['price'];
+                    $productLink = $productInfo['link'];
+                    $productName = $productInfo['name'];
+                    $totalPrice += $productLineTotal;
+                ?>
                     <tr class="productitm">
-                        <td><img src="<?php echo $productLinks[$index]['link'];?>" width="100" height="100"><br></td>
-                        <td>Количество: <?php echo $productQuantity[$index]['quantity'];?><br></td>
-                        <td><?php echo $productNames[$index]['name'];?><br></td>
-                        <td><?php echo number_format($productLineTotal[$index]['lineTotal'], 0, ',', ' '); ?>₽<br></td>
+                        <form action="/delete-product" method="POST">
+                            <td><img src="<?php echo $productLink; ?>"width="100" height="100"><br></td>
+                            <td>Количество: <?php echo $productQuantity;?><br></td>
+                            <td><?php echo $productName; ?></td>
+                            <td><?php echo number_format($productLineTotal, 0, ',', ' '); ?>₽</td>
+                        </form>
                     </tr>
-
                 <?php endforeach;?>
             </div>
             <tr class="totalprice">

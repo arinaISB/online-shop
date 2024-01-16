@@ -16,9 +16,8 @@ class Cart extends Model
     {
         $statement = $this->pdo->prepare("SELECT id FROM carts WHERE user_id = :user_id");
         $statement->execute(['user_id' => $userId]);
-        $result = $statement->fetch();
 
-        return !empty($result);
+        return $statement->fetchColumn();
     }
 
     public function isCartExist(int $userId)

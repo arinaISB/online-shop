@@ -32,40 +32,10 @@ class PlaceOrderController
         {
             header("Location: /login");
         } else {
-
             $userId = $_SESSION['user_id'];
             $cartId = $this->cartModel->getCartId($userId);
             $productsInCart = $this->cartProductModel->getProductsInCart($cartId);
-
-            $productLinks = [];
-            foreach ($productsInCart as $productInCart) {
-                $link = $this->productModel->getProductLink($productInCart['product_id']);
-                $productLinks[] = ['link' => $link];
-            }
-
-            $productNames = [];
-            foreach ($productsInCart as $productInCart) {
-                $name = $this->productModel->getProductName($productInCart['product_id']);
-                $productNames[] = ['name' => $name];
-            }
-
-            $productQuantity = [];
-            foreach ($productsInCart as $productInCart) {
-                $quantity = $this->cartProductModel->getProductQuantity($cartId, $productInCart['product_id']);
-                $productQuantity[] = ['quantity' => $quantity];
-            }
-
-            $productLineTotal = [];
-            foreach ($productsInCart as $productInCart) {
-                $price = $this->productModel->getProductPrice($productInCart['product_id']);
-                $lineTotal = $quantity * $price;
-                $productLineTotal[] = ['lineTotal' => $lineTotal];
-            }
-
-            $totalPrice = 0;
-            foreach ($productLineTotal as $item) {
-                $totalPrice += $item['lineTotal'];
-            }
+            $totalPrice = $this->calculateTotalPrice($productsInCart);
 
             require_once './../View/place_order.php';
         }
@@ -78,70 +48,49 @@ class PlaceOrderController
         {
             header("Location: /login");
         } else {
-
             $userId = $_SESSION['user_id'];
             $cartId = $this->cartModel->getCartId($userId);
             $productsInCart = $this->cartProductModel->getProductsInCart($cartId);
-
-
-            $email = $data['checkout-email'];
-            $phone = $data['checkout-phone'];
-            $userName = $data['checkout-name'];
-            $address = $data['checkout-address'];
-            $city = $data['checkout-city'];
-            $country = $data['checkout-country'];
-            $postal = $data['checkout-postal'];
-
-            $productLinks = [];
-            $productNames = [];
-            $productQuantity = [];
-            $productLineTotal = [];
-
-            $productLinks = [];
-            foreach ($productsInCart as $productInCart) {
-                $link = $this->productModel->getProductLink($productInCart['product_id']);
-                $productLinks[] = ['link' => $link];
-            }
-
-            $productNames = [];
-            foreach ($productsInCart as $productInCart) {
-                $name = $this->productModel->getProductName($productInCart['product_id']);
-                $productNames[] = ['name' => $name];
-            }
-
-            $productQuantity = [];
-            foreach ($productsInCart as $productInCart) {
-                $quantity = $this->cartProductModel->getProductQuantity($cartId, $productInCart['product_id']);
-                $productQuantity[] = ['quantity' => $quantity];
-            }
-
-            $productLineTotal = [];
-            foreach ($productsInCart as $productInCart) {
-                $price = $this->productModel->getProductPrice($productInCart['product_id']);
-                $lineTotal = $quantity * $price;
-                $productLineTotal[] = ['lineTotal' => $lineTotal];
-            }
-
-            $totalPrice = 0;
-            foreach ($productLineTotal as $item) {
-                $totalPrice += $item['lineTotal'];
-            }
-
-            $placedOrderId = $this->placedOrder->addAndGetPlacedOrder($totalPrice, $email, $phone, $userName, $address, $city, $country, $postal);
+            $totalPrice = $this->calculateTotalPrice($productsInCart);
+            $placedOrderId = $this->createPlacedOrder($data, $totalPrice);
 
             foreach ($productsInCart as $productInCart) {
                 $productId = $productInCart['product_id'];
                 $quantity = $productInCart['quantity'];
-
-                $cartInfo = $this->orderedCart->addOrderedItems($placedOrderId, $cartId, $productId, $quantity);
-                $deleteProduct = $this->cartProductModel->deleteProduct($cartId, $productId);
+                $productInfo = $this->productModel->getProductInfo($productId);
+                $productLineTotal = $quantity * $productInfo['price'];
+                $this->orderedCart->addOrderedItems($placedOrderId, $productId, $quantity, $productLineTotal);
+                $this->cartProductModel->deleteProduct($cartId, $productId);
             }
 
             header("Location: /main");
-
-            require_once './../View/place_order.php';
         }
     }
 
+    private function calculateTotalPrice($productsInCart): float|int
+    {
+        $totalPrice = 0;
 
+        foreach ($productsInCart as $productInCart) {
+            $productId = $productInCart['product_id'];
+            $productInfo = $this->productModel->getProductInfo($productId);
+            $quantity = $productInCart['quantity'];
+            $productLineTotal = $quantity * $productInfo['price'];
+            $totalPrice += $productLineTotal;
+        }
+        return $totalPrice;
+    }
+
+    private function createPlacedOrder($data, $totalPrice): string
+    {
+        $email = $data['checkout-email'];
+        $phone = $data['checkout-phone'];
+        $userName = $data['checkout-name'];
+        $address = $data['checkout-address'];
+        $city = $data['checkout-city'];
+        $country = $data['checkout-country'];
+        $postal = $data['checkout-postal'];
+
+        return $this->placedOrder->addAndGetPlacedOrder($totalPrice, $email, $phone, $userName, $address, $city, $country, $postal);
+    }
 }

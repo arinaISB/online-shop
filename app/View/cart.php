@@ -16,14 +16,25 @@
             </thead>
             <tbody>
             <!-- shopping cart contents -->
-            <?php foreach ($productsInCart as $index => $productInCart): ?>
+            <?php
+                $totalPrice = 0;
+            ?>
+            <?php foreach ($productsInCart as $productInCart): ?>
+                <?php
+                    $productId = $productInCart['product_id'];
+                    $productInfo = $this->productModel->getProductInfo($productId);
+                    $productQuantity = $productInCart['quantity'];
+                    $productLineTotal = $productQuantity * $productInfo['price'];
+                    $productLink = $productInfo['link'];
+                    $productName = $productInfo['name'];
+                    $totalPrice += $productLineTotal;
+                ?>
                 <tr class="productitm">
                     <form action="/delete-product" method="POST">
-                        <td><img src="<?php echo $productLinks[$index]['link']; ?>"></td>
-                        <td><input type="number" value="<?php echo $productQuantity[$index]['quantity']; ?>" min="1" max="99" class="qtyinput"></td>
-                        <td><?php echo $productNames[$index]['name']; ?></td>
-                        <td><?php echo number_format($productLineTotal[$index]['lineTotal'], 0, ',', ' '); ?>₽</td>
-                        <td>
+                        <td><img src="<?php echo $productLink; ?>"></td>
+                        <td><input type="number" value="<?php echo $productQuantity; ?>" min="1" max="99" class="qtyinput"></td>
+                        <td><?php echo $productName; ?></td>
+                        <td><?php echo number_format($productLineTotal, 0, ',', ' '); ?>₽</td>
                             <span class="remove">
                                 <button type="submit" class="delete-button" name="product_id" value="<?php echo $productInCart['product_id']; ?>">
                                     <img src="https://i.imgur.com/h1ldGRr.png" alt="X">
