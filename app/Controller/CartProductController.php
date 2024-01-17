@@ -3,6 +3,7 @@
 namespace Controller;
 use Model\Cart;
 use Model\CartProduct;
+use Request\Request;
 
 class CartProductController
 {
@@ -26,33 +27,41 @@ class CartProductController
         }
     }
 
-    public function addProduct(array $data): void
+    public function addProduct(Request $request): void
     {
         session_start();
         if (!isset($_SESSION['user_id']))
         {
             header("Location: /login");
         } else {
-            $userId = $_SESSION['user_id'];
-            $productId = $data['product_id'];
-            $quantity = $data['quantity'];
+            $data  = $request->getBody();
 
-            $cart = $this->cartModel->getCart($userId);
-            if (!empty($cart)) {
-                $cartProduct = $this->cartProductModel->getCartProduct($cart['id'], $productId);
-                if (empty($cartProduct)) {
-                    $this->cartProductModel->addCartProduct($cart['id'], $productId, $quantity);
-                } else {
-                    $currentQuantity = $cartProduct['quantity'];
-                    $newQuantity = $currentQuantity + $quantity;
-                    $this->cartProductModel->updateProductQuantity($cart['id'], $productId, $newQuantity);
-                }
+            $productId = $data['product_id'] ?? '';
+            $quantity = $data['quantity'] ?? '';
+
+            if (empty($productId) || empty($quantity))
+            {
+                echo "An error has occurred. Please fill out all fields.";
+                exit;
             } else {
-                $this->cartModel->createCart($userId);
+                $userId = $_SESSION['user_id'];
                 $cart = $this->cartModel->getCart($userId);
-                $this->cartProductModel->addCartProducts($cart['id'], $productId, $quantity);
+                if (!empty($cart)) {
+                    $cartProduct = $this->cartProductModel->getCartProduct($cart['id'], $productId);
+                    if (empty($cartProduct)) {
+                        $this->cartProductModel->addCartProduct($cart['id'], $productId, $quantity);
+                    } else {
+                        $currentQuantity = $cartProduct['quantity'];
+                        $newQuantity = $currentQuantity + $quantity;
+                        $this->cartProductModel->updateProductQuantity($cart['id'], $productId, $newQuantity);
+                    }
+                } else {
+                    $this->cartModel->createCart($userId);
+                    $cart = $this->cartModel->getCart($userId);
+                    $this->cartProductModel->addCartProducts($cart['id'], $productId, $quantity);
+                }
+                header("Location: /main");
             }
-            header("Location: /main");
         }
     }
 

@@ -84,8 +84,6 @@ class App
     {
         $requestUri = $_SERVER['REQUEST_URI'];
 
-//        $obj = new Controller\UserController();//теперь обращаемся к классу с указанием namespace
-
         if (isset($this->routes[$requestUri])) {
             $requestMethod = $_SERVER['REQUEST_METHOD'];
             $routeMethods = $this->routes[$requestUri];
@@ -97,7 +95,9 @@ class App
                 $method = $handler['method'];
 
                 $obj = new $class();
-                $obj->$method($_POST);
+
+                $request = new Request\Request($_POST);
+                $obj->$method($request);
             } else {
                 echo "Метод $requestMethod не поддерживается для $requestUri";
             }

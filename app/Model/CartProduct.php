@@ -16,21 +16,6 @@ class CartProduct extends Model
         $statement->execute(['cart_id' => $cartId, 'product_id' => $productId]);
         return $statement->fetch();
     }
-//    public function isProductInCart(int $cartId, int $productId): bool
-//    {
-//        $statement = $this->pdo->prepare("SELECT COUNT(*) FROM cart_products WHERE cart_id = :cart_id AND product_id = :product_id");
-//        $statement->execute(['cart_id' => $cartId, 'product_id' => $productId]);
-//        $result = $statement->fetchColumn();
-//
-//        return $result > 0;
-//    }
-
-//    public function getProductQuantity(int $cartId, int $productId): int
-//    {
-//        $statement = $this->pdo->prepare("SELECT quantity FROM cart_products WHERE cart_id = :cart_id AND product_id = :product_id");
-//        $statement->execute(['cart_id' => $cartId, 'product_id' => $productId]);
-//        return $statement->fetchColumn();
-//    }
 
     public function updateProductQuantity($cartId, $productId, $newQuantity): bool
     {
