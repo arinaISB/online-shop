@@ -5,81 +5,11 @@ use Controller\CartProductController;
 use Controller\MainController;
 use Controller\PlaceOrderController;
 use Controller\UserController;
+use Request\RegistrationRequest;
+use Request\Request;
 
 class App
 {
-    private array $routes = [
-        '/registration' => [
-            'GET' => [
-                'class' => UserController::class,
-                'method' => 'getRegistration'
-            ],
-            'POST' => [
-                'class' => UserController::class,
-                'method' => 'registration'
-            ]
-        ],
-
-        '/login' => [
-            'GET' => [
-                'class' => UserController::class,
-                'method' => 'getLogin'
-            ],
-            'POST' => [
-                'class' => UserController::class,
-                'method' => 'login'
-            ]
-        ],
-        '/main' => [
-            'GET' => [
-                'class' => MainController::class,
-                'method' => 'getProducts'
-            ]
-        ],
-        '/logout' => [
-            'POST' => [
-                'class' => UserController::class,
-                'method' => 'logout'
-            ]
-        ],
-
-        '/add-product' => [
-            'GET' => [
-                'class' => CartProductController::class,
-                'method' => 'getAddProductForm'
-            ],
-            'POST' => [
-                'class' => CartProductController::class,
-                'method' => 'addProduct'
-            ]
-        ],
-
-        '/delete-product' => [
-            'POST' => [
-                'class' => CartController::class,
-                'method' => 'deleteProduct'
-            ]
-        ],
-
-        '/placeOrder' => [
-            'GET' => [
-                'class' => PlaceOrderController::class,
-                'method' => 'getPlaceOrderForm'
-            ],
-            'POST' => [
-                'class' => PlaceOrderController::class,
-                'method' => 'placeOrderForm'
-            ]
-        ],
-
-        '/cart' => [
-            'GET' => [
-                'class' => CartController::class,
-                'method' => 'getCartForm'
-            ]
-        ]
-    ];
-
     public function run(): void
     {
         $requestUri = $_SERVER['REQUEST_URI'];
@@ -93,10 +23,11 @@ class App
 
                 $class = $handler['class'];
                 $method = $handler['method'];
+                $requestClass = $handler['request'] ?? Request::class; // иначе передается объект общего Request
 
-                $obj = new $class();
+                $obj = new $class(); //создаем объект контроллера
 
-                $request = new Request\Request($_POST);
+                $request = new Request($_POST); //создаем объект класса Request
                 $obj->$method($request);
             } else {
                 echo "Метод $requestMethod не поддерживается для $requestUri";
@@ -104,5 +35,41 @@ class App
         } else {
             require_once './../View/not_found.php';
         }
+    }
+
+    public function get(string $route, string $class, string $method, string $requestClass = null)
+    {
+        $this->routes[$route]['GET'] = [
+            'class' => $class,
+            'method' => $method,
+            'request' => $requestClass
+        ];
+    }
+
+    public function post(string $route, string $class, string $method, string $requestClass = null)
+    {
+        $this->routes[$route]['POST'] = [
+            'class' => $class,
+            'method' => $method,
+            'request' => $requestClass
+        ];
+    }
+
+    public function put(string $route, string $class, string $method, string $requestClass = null)
+    {
+        $this->routes[$route]['PUT'] = [
+            'class' => $class,
+            'method' => $method,
+            'request' => $requestClass
+        ];
+    }
+
+    public function delete(string $route, string $class, string $method, string $requestClass = null)
+    {
+        $this->routes[$route]['DELETE'] = [
+            'class' => $class,
+            'method' => $method,
+            'request' => $requestClass
+        ];
     }
 }

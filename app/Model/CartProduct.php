@@ -23,12 +23,6 @@ class CartProduct extends Model
         return $statement->execute(['cart_id' => $cartId, 'product_id' => $productId, 'quantity' => $newQuantity]);
     }
 
-    public function addCartProduct(int $cartId, int $productId, int $quantity): bool
-    {
-        $statement = $this->pdo->prepare("INSERT INTO cart_products (cart_id, product_id, quantity) VALUES (:cart_id, :product_id, :quantity)");
-        return $statement->execute(['cart_id' => $cartId, 'product_id' => $productId, 'quantity' => $quantity]);
-    }
-
     public function getProductsInCart(int $cartId): false|array
     {
         $statement = $this->pdo->prepare("SELECT * FROM cart_products WHERE cart_id = :cart_id");

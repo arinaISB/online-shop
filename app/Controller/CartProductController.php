@@ -47,7 +47,7 @@ class CartProductController
                     $cartProduct = $this->cartProductModel->getCartProduct($cart['id'], $productId);
 
                     if (empty($cartProduct)) {
-                        $this->cartProductModel->addCartProduct($cart['id'], $productId, $quantity);
+                        $this->cartProductModel->addCartProducts($cart['id'], $productId, $quantity);
                     } else {
                         $currentQuantity = $cartProduct['quantity'];
                         $newQuantity = $currentQuantity + $quantity;

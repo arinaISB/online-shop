@@ -16,14 +16,4 @@ class Product extends Model
         $statement->execute(['id' => $id]);
         return $statement->fetch();
     }
-
-
-    public function getProductPrice(int $id)
-    {
-        $statement = $this->pdo->prepare("SELECT price FROM products WHERE id = :id");
-        $statement->execute(['id' => $id]);
-        $productPrice = $statement->fetchColumn();
-
-        return $productPrice;
-    }
 }

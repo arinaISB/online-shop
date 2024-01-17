@@ -4,7 +4,7 @@ namespace Request;
 
 class Request
 {
-    private array $body;
+    protected array $body;
     public function __construct(array $body)
     {
         $this->body = $body;

@@ -2,6 +2,7 @@
 
 namespace Controller;
 use Model\User;
+use Request\RegistrationRequest;
 
 class UserController
 {
@@ -16,66 +17,20 @@ class UserController
         require_once './../View/registration.php';
     }
 
-    public function registration(array $data): void
+    public function registration(RegistrationRequest $request): void
     {
-        $errors = $this->validateRegistrationForm($data);
+        $errors = $request->validate();
 
         if(empty($errors)) {
-            $name = $data['name'];
-            $email = $data['email'];
-            $password = $data['psw'];
-
+            $name = $request->getName();
+            $email = $request->getEmail();
+            $password = $request->getPassword();
             $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
-
             $this->modelUser->addUser($email, $name, $hashedPassword);
 
             header("Location: /login");
         }
         require_once './../View/registration.php';
-    }
-
-    private function validateRegistrationForm(array $data): array
-    {
-        $errors = [];
-
-        $name = $data['name'];
-        if (strlen($name) < 2)
-        {
-            $errors['name'] = "The name must be more than two characters";
-        } elseif (!ctype_alpha($name))
-        {
-            $errors['name'] = "The name can only contain alphabetic characters";
-        }
-
-        $email = $data['email'];
-
-        if (!filter_var($email, FILTER_VALIDATE_EMAIL))
-        {
-            $errors['email'] = "Email is invalid";
-        } else
-            {
-                $existingUser = $this->modelUser->getOneByEmail($email);
-                if ($existingUser) {
-                    $errors['email'] = "Email already exists";
-                }
-            }
-
-
-        $password = $data['psw'];
-        $repeatPassword = $data['psw-repeat'];
-
-        if (strlen($password) < 8)
-        {
-            $errors['psw'] = "The password must contain at least 8 characters";
-
-        } elseif (!preg_match("/^(?=.*[A-Za-z])(?=.*\d).+$/", $password))
-        {
-            $errors['psw'] = "The password must contain at least one letter and one number";
-        } elseif ($password !== $repeatPassword)
-        {
-            $errors['psw-repeat'] = "Password and repeat password do not match";
-        }
-        return $errors;
     }
 
     public function getLogin(): void
@@ -99,6 +54,7 @@ class UserController
                 header("Location: /main");
             }
         }
+
         require_once './../View/login.php';
     }
 
@@ -131,6 +87,7 @@ class UserController
         if (session_status() === PHP_SESSION_ACTIVE) {
             session_destroy();
         }
+
         header("Location: /login");
     }
 }

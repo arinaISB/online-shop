@@ -8,9 +8,7 @@ class User extends Model
     {
         $statement = $this->pdo->prepare("SELECT * FROM users WHERE email = :email");
         $statement->execute(['email' => $email]);
-        $result = $statement->fetch();
-
-        return $result;
+        return $statement->fetch();
     }
 
     public function addUser(string $email, string $name, string $password): void

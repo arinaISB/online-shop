@@ -17,13 +17,4 @@ class Cart extends Model
 
         return $statement->fetch();
     }
-
-    public function isCartExist(int $userId): bool
-    {
-        $statement = $this->pdo->prepare("SELECT * FROM carts WHERE user_id = :user_id");
-        $statement->execute(['user_id' => $userId]);
-        $result = $statement->fetch();
-
-        return !empty($result);
-    }
 }
