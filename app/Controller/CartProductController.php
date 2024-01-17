@@ -35,19 +35,17 @@ class CartProductController
             header("Location: /login");
         } else {
             $data  = $request->getBody();
-
             $productId = $data['product_id'] ?? '';
             $quantity = $data['quantity'] ?? '';
 
-            if (empty($productId) || empty($quantity))
+            if ($this->validateData($productId, $quantity ))
             {
-                echo "An error has occurred. Please fill out all fields.";
-                exit;
-            } else {
                 $userId = $_SESSION['user_id'];
                 $cart = $this->cartModel->getCart($userId);
+
                 if (!empty($cart)) {
                     $cartProduct = $this->cartProductModel->getCartProduct($cart['id'], $productId);
+
                     if (empty($cartProduct)) {
                         $this->cartProductModel->addCartProduct($cart['id'], $productId, $quantity);
                     } else {
@@ -60,10 +58,20 @@ class CartProductController
                     $cart = $this->cartModel->getCart($userId);
                     $this->cartProductModel->addCartProducts($cart['id'], $productId, $quantity);
                 }
+
                 header("Location: /main");
             }
         }
     }
 
+    public function validateData(int $productId, int $quantity)
+    {
+        if (empty($productId) || empty($quantity) & $quantity > 0)
+        {
+            echo "An error has occurred. Please fill out all fields.";
+            exit;
+        }
 
+        return true;
+    }
 }

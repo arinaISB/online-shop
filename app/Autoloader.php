@@ -6,7 +6,6 @@ class Autoloader
     {
         $autoloader = function (string $className) use ($dir)
         {
-            //Controller\UserController
             $path = str_replace('\\', DIRECTORY_SEPARATOR, $className); //Controller/UserController
 
             //echo __DIR__;  нынешняя директория
