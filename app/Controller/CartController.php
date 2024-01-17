@@ -26,8 +26,8 @@ class CartController
             header("Location: /login");
         } else {
             $userId = $_SESSION['user_id'];
-            $cartId = $this->cartModel->getCartId($userId);
-            $productsInCart = $this->cartProductModel->getProductsInCart($cartId);
+            $cart = $this->cartModel->getCart($userId);
+            $productsInCart = $this->cartProductModel->getProductsInCart($cart['id']);
 
             require_once './../View/cart.php';
         }
@@ -42,9 +42,9 @@ class CartController
             if (isset($data['product_id']))
             {
                 $userId = $_SESSION['user_id'];
-                $cartId = $this->cartModel->getCartId($userId);
+                $cart = $this->cartModel->getCart($userId);
                 $productId = $data['product_id'];
-                $this->cartProductModel->deleteProduct($cartId, $productId);
+                $this->cartProductModel->deleteProduct($cart['id'], $productId);
             }
             header("Location: /cart");
         }

@@ -37,20 +37,20 @@ class CartProductController
             $productId = $data['product_id'];
             $quantity = $data['quantity'];
 
-            if ($this->cartModel->isCartExist($userId)) {
-                $cartId = $this->cartModel->getCartId($userId);
-
-                if ($this->cartProductModel->isProductInCart($cartId, $productId)) {
-                    $currentQuantity = $this->cartProductModel->getProductQuantity($cartId, $productId);
-                    $newQuantity = $currentQuantity + $quantity;
-                    $this->cartProductModel->updateProductQuantity($cartId, $productId, $newQuantity);
+            $cart = $this->cartModel->getCart($userId);
+            if (!empty($cart)) {
+                $cartProduct = $this->cartProductModel->getCartProduct($cart['id'], $productId);
+                if (empty($cartProduct)) {
+                    $this->cartProductModel->addCartProduct($cart['id'], $productId, $quantity);
                 } else {
-                    $this->cartProductModel->addCartProduct($cartId, $productId, $quantity);
+                    $currentQuantity = $cartProduct['quantity'];
+                    $newQuantity = $currentQuantity + $quantity;
+                    $this->cartProductModel->updateProductQuantity($cart['id'], $productId, $newQuantity);
                 }
             } else {
                 $this->cartModel->createCart($userId);
-                $cartId = $this->cartModel->getCartId($userId);
-                $this->cartProductModel->addCartProducts($cartId, $productId, $quantity);
+                $cart = $this->cartModel->getCart($userId);
+                $this->cartProductModel->addCartProducts($cart['id'], $productId, $quantity);
             }
             header("Location: /main");
         }

@@ -4,23 +4,21 @@ namespace Model;
 
 class Cart extends Model
 {
-    public function createCart(int $userId)
+    public function createCart(int $userId): bool
     {
         $statement = $this->pdo->prepare("INSERT INTO carts (user_id) VALUES (:user_id)");
-        $newCart = $statement->execute(['user_id' => $userId]);
-
-        return $newCart;
+        return $statement->execute(['user_id' => $userId]);
     }
 
-    public function getCartId(int $userId)
+    public function getCart(int $userId): array|false
     {
-        $statement = $this->pdo->prepare("SELECT id FROM carts WHERE user_id = :user_id");
+        $statement = $this->pdo->prepare("SELECT * FROM carts WHERE user_id = :user_id");
         $statement->execute(['user_id' => $userId]);
 
-        return $statement->fetchColumn();
+        return $statement->fetch();
     }
 
-    public function isCartExist(int $userId)
+    public function isCartExist(int $userId): bool
     {
         $statement = $this->pdo->prepare("SELECT * FROM carts WHERE user_id = :user_id");
         $statement->execute(['user_id' => $userId]);

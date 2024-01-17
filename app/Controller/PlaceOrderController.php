@@ -33,8 +33,8 @@ class PlaceOrderController
             header("Location: /login");
         } else {
             $userId = $_SESSION['user_id'];
-            $cartId = $this->cartModel->getCartId($userId);
-            $productsInCart = $this->cartProductModel->getProductsInCart($cartId);
+            $cart = $this->cartModel->getCart($userId);
+            $productsInCart = $this->cartProductModel->getProductsInCart($cart['id']);
             $totalPrice = $this->calculateTotalPrice($productsInCart);
 
             require_once './../View/place_order.php';
@@ -49,8 +49,8 @@ class PlaceOrderController
             header("Location: /login");
         } else {
             $userId = $_SESSION['user_id'];
-            $cartId = $this->cartModel->getCartId($userId);
-            $productsInCart = $this->cartProductModel->getProductsInCart($cartId);
+            $cart = $this->cartModel->getCart($userId);
+            $productsInCart = $this->cartProductModel->getProductsInCart($cart['id']);
             $totalPrice = $this->calculateTotalPrice($productsInCart);
             $placedOrderId = $this->createPlacedOrder($data, $totalPrice);
 
@@ -60,7 +60,7 @@ class PlaceOrderController
                 $productInfo = $this->productModel->getProductInfo($productId);
                 $productLineTotal = $quantity * $productInfo['price'];
                 $this->orderedCart->addOrderedItems($placedOrderId, $productId, $quantity, $productLineTotal);
-                $this->cartProductModel->deleteProduct($cartId, $productId);
+                $this->cartProductModel->deleteProduct($cart['id'], $productId);
             }
 
             header("Location: /main");

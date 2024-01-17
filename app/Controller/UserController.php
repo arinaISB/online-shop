@@ -16,14 +16,14 @@ class UserController
         require_once './../View/registration.php';
     }
 
-    public function registration(): void
+    public function registration(array $data): void
     {
-        $errors = $this->validateRegistrationForm($_POST);
+        $errors = $this->validateRegistrationForm($data);
 
         if(empty($errors)) {
-            $name = $_POST['name'];
-            $email = $_POST['email'];
-            $password = $_POST['psw'];
+            $name = $data['name'];
+            $email = $data['email'];
+            $password = $data['psw'];
 
             $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
@@ -83,14 +83,14 @@ class UserController
         require_once './../View/login.php';
     }
 
-    public function login(): void
+    public function login($data): void
     {
-        $errors = $this->validateLoginForm($_POST);
+        $errors = $this->validateLoginForm($data);
 
         if(empty($errors))
         {
-            $password = $_POST['password'];
-            $email = $_POST['email'];
+            $password = $data['password'];
+            $email = $data['email'];
             $user = $this->modelUser->getOneByEmail($email);
             //setcookie('user_id', $data['id']);  небезопасно!
             if ($user) {

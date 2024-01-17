@@ -2,7 +2,7 @@
 
 class Autoloader
 {
-    public static function registrate (string $dir)
+    public static function registrate (string $dir): void
     {
         $autoloader = function (string $className) use ($dir)
         {
