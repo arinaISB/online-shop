@@ -1,11 +1,5 @@
 <?php
 
-use Controller\CartController;
-use Controller\CartProductController;
-use Controller\MainController;
-use Controller\PlaceOrderController;
-use Controller\UserController;
-use Request\RegistrationRequest;
 use Request\Request;
 
 class App
@@ -27,7 +21,7 @@ class App
 
                 $obj = new $class(); //создаем объект контроллера
 
-                $request = new Request($_POST); //создаем объект класса Request
+                $request = new $requestClass($_POST); //создаем объект класса Request
                 $obj->$method($request);
             } else {
                 echo "Метод $requestMethod не поддерживается для $requestUri";

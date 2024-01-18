@@ -5,6 +5,10 @@ use Controller\CartProductController;
 use Controller\MainController;
 use Controller\PlaceOrderController;
 use Controller\UserController;
+use Request\AddProductRequest;
+use Request\DeleteProductRequest;
+use Request\LoginRequest;
+use Request\PlaceOrderFormRequest;
 use Request\RegistrationRequest;
 
 require_once './../Autoloader.php';
@@ -21,10 +25,10 @@ $app->get('/placeOrder', PlaceOrderController::class, 'getPlaceOrderForm');
 $app->get('/cart', CartController::class, 'getCartForm');
 
 $app->post('/registration', UserController::class, 'registration', RegistrationRequest::class);
-$app->post('/login', UserController::class, 'login');
+$app->post('/login', UserController::class, 'login', LoginRequest::class);
 $app->post('/logout', UserController::class, 'logout');
-$app->post('/add-product', CartProductController::class, 'addProduct');
-$app->post('/delete-product', CartController::class, 'deleteProduct');
-$app->post('/placeOrder', PlaceOrderController::class, 'placeOrderForm');
+$app->post('/add-product', CartProductController::class, 'addProduct', AddProductRequest::class);
+$app->post('/delete-product', CartController::class, 'deleteProduct', DeleteProductRequest::class);
+$app->post('/placeOrder', PlaceOrderController::class, 'placeOrderForm', PlaceOrderFormRequest::class);
 
 $app->run();

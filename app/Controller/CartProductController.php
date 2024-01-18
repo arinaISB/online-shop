@@ -3,6 +3,7 @@
 namespace Controller;
 use Model\Cart;
 use Model\CartProduct;
+use Request\AddProductRequest;
 use Request\Request;
 
 class CartProductController
@@ -27,19 +28,18 @@ class CartProductController
         }
     }
 
-    public function addProduct(Request $request): void
+    public function addProduct(AddProductRequest $request): void
     {
         session_start();
         if (!isset($_SESSION['user_id']))
         {
             header("Location: /login");
         } else {
-            $data  = $request->getBody();
-            $productId = $data['product_id'] ?? '';
-            $quantity = $data['quantity'] ?? '';
-
-            if ($this->validateData($productId, $quantity ))
+            if ($request->validateData())
             {
+                $productId = $request->getProductId();
+                $quantity = $request->getQuantity();
+
                 $userId = $_SESSION['user_id'];
                 $cart = $this->cartModel->getCart($userId);
 
@@ -61,17 +61,7 @@ class CartProductController
 
                 header("Location: /main");
             }
-        }
-    }
 
-    public function validateData(int $productId, int $quantity)
-    {
-        if (empty($productId) || empty($quantity) & $quantity > 0)
-        {
-            echo "An error has occurred. Please fill out all fields.";
-            exit;
         }
-
-        return true;
     }
 }

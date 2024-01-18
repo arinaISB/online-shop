@@ -2,6 +2,7 @@
 
 namespace Controller;
 use Model\User;
+use Request\LoginRequest;
 use Request\RegistrationRequest;
 
 class UserController
@@ -38,14 +39,14 @@ class UserController
         require_once './../View/login.php';
     }
 
-    public function login($data): void
+    public function login(LoginRequest $request): void
     {
-        $errors = $this->validateLoginForm($data);
+        $errors = $request->validate();
 
         if(empty($errors))
         {
-            $password = $data['password'];
-            $email = $data['email'];
+            $password = $request->getPassword();
+            $email = $request->getEmail();
             $user = $this->modelUser->getOneByEmail($email);
             //setcookie('user_id', $data['id']);  небезопасно!
             if ($user) {
@@ -58,29 +59,6 @@ class UserController
         require_once './../View/login.php';
     }
 
-    private function validateLoginForm(array $data): array
-    {
-        $password = $data['password'];
-        $email = $data['email'];
-
-        $user = $this->modelUser->getOneByEmail($email);
-
-        $errors = [];
-
-        if (empty($email)) {
-            $errors['email'] = 'Email is required';
-        } elseif (empty($password)) {
-            $errors['password'] = 'Password is required';
-        } elseif (empty($data)) {
-            $errors['email'] = 'You are not registered';
-        } else {
-            if (!password_verify($password, $user['password'])) {
-                $errors['password'] = 'Invalid password or email';
-            }
-        }
-
-        return $errors;
-    }
 
     public function logout(): void
     {

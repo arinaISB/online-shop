@@ -7,6 +7,7 @@ use Model\CartProduct;
 use Model\OrderedCart;
 use Model\PlacedOrder;
 use Model\Product;
+use Request\PlaceOrderFormRequest;
 
 class PlaceOrderController
 {
@@ -41,26 +42,31 @@ class PlaceOrderController
         }
     }
 
-    public function placeOrderForm(array $data)
+    public function placeOrderForm(PlaceOrderFormRequest $request)
     {
         session_start();
         if (!isset($_SESSION['user_id']))
         {
             header("Location: /login");
         } else {
-            $userId = $_SESSION['user_id'];
-            $cart = $this->cartModel->getCart($userId);
-            $productsInCart = $this->cartProductModel->getProductsInCart($cart['id']);
-            $totalPrice = $this->calculateTotalPrice($productsInCart);
-            $placedOrderId = $this->createPlacedOrder($data, $totalPrice);
+            $errors = $request->validate();
 
-            foreach ($productsInCart as $productInCart) {
-                $productId = $productInCart['product_id'];
-                $quantity = $productInCart['quantity'];
-                $productInfo = $this->productModel->getProductInfo($productId);
-                $productLineTotal = $quantity * $productInfo['price'];
-                $this->orderedCart->addOrderedItems($placedOrderId, $productId, $quantity, $productLineTotal);
-                $this->cartProductModel->deleteProduct($cart['id'], $productId);
+            if (empty($errors))
+            {
+                $userId = $_SESSION['user_id'];
+                $cart = $this->cartModel->getCart($userId);
+                $productsInCart = $this->cartProductModel->getProductsInCart($cart['id']);
+                $totalPrice = $this->calculateTotalPrice($productsInCart);
+                $placedOrderId = $this->createPlacedOrder($request, $totalPrice);
+
+                foreach ($productsInCart as $productInCart) {
+                    $productId = $productInCart['product_id'];
+                    $quantity = $productInCart['quantity'];
+                    $productInfo = $this->productModel->getProductInfo($productId);
+                    $productLineTotal = $quantity * $productInfo['price'];
+                    $this->orderedCart->addOrderedItems($placedOrderId, $productId, $quantity, $productLineTotal);
+                    $this->cartProductModel->deleteProduct($cart['id'], $productId);
+                }
             }
 
             header("Location: /main");
@@ -78,18 +84,19 @@ class PlaceOrderController
             $productLineTotal = $quantity * $productInfo['price'];
             $totalPrice += $productLineTotal;
         }
+
         return $totalPrice;
     }
 
-    private function createPlacedOrder($data, $totalPrice): string
+    private function createPlacedOrder(PlaceOrderFormRequest $request, $totalPrice): string
     {
-        $email = $data['checkout-email'];
-        $phone = $data['checkout-phone'];
-        $userName = $data['checkout-name'];
-        $address = $data['checkout-address'];
-        $city = $data['checkout-city'];
-        $country = $data['checkout-country'];
-        $postal = $data['checkout-postal'];
+        $email = $request->getEmail();
+        $phone = $request->getPhone();
+        $userName = $request->getName();
+        $address = $request->getAddress();
+        $city = $request->getCity();
+        $country = $request->getCountry();
+        $postal = $request->getPostal();
 
         return $this->placedOrder->addAndGetPlacedOrder($totalPrice, $email, $phone, $userName, $address, $city, $country, $postal);
     }
