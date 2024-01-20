@@ -4,17 +4,20 @@ namespace Request;
 
 class AddProductRequest extends Request
 {
-    public function validateData()
+    public function validate(): array
     {
+        $errors = [];
         $productId = $this->getProductId();
         $quantity = $this->getQuantity();
 
-        if (empty($productId) || empty($quantity) || $quantity < 1)
+        if (empty($productId))
         {
-            echo "An error has occurred. Please fill out all fields.";
-            exit;
+            $errors['add_product'] =  "An error has occurred. Please fill out all fields.";
+        } elseif (empty($quantity) || $quantity < 1) {
+            $errors['quantity'] = "Enter the correct number of products";
         }
-        return true;
+
+        return $errors;
     }
 
     public function getProductId()

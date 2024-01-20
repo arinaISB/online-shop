@@ -3,18 +3,20 @@
 namespace Controller;
 use Model\Cart;
 use Model\CartProduct;
+use Model\Product;
 use Request\AddProductRequest;
-use Request\Request;
 
 class CartProductController
 {
     private CartProduct $cartProductModel;
     private Cart $cartModel;
+    private Product $productModel;
 
     public function __construct()
     {
         $this->cartProductModel = new CartProduct();
         $this->cartModel = new Cart();
+        $this->productModel = new Product();
     }
 
     public function getAddProductForm(): void
@@ -35,7 +37,10 @@ class CartProductController
         {
             header("Location: /login");
         } else {
-            if ($request->validateData())
+            $errors = $request->validate();
+            $products = $this->productModel->getAll();
+
+            if (empty($errors))
             {
                 $productId = $request->getProductId();
                 $quantity = $request->getQuantity();
@@ -62,6 +67,7 @@ class CartProductController
                 header("Location: /main");
             }
 
+            require_once './../View/main.php';
         }
     }
 }

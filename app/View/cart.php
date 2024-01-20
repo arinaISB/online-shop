@@ -17,25 +17,28 @@
             <tbody>
             <!-- shopping cart contents -->
             <?php
-                $totalPrice = 0;
+            $totalPrice = 0;
             ?>
             <?php foreach ($productsInCart as $productInCart): ?>
                 <?php
-                    $productId = $productInCart['product_id'];
-                    $productInfo = $this->productModel->getProductInfo($productId);
-                    $productQuantity = $productInCart['quantity'];
-                    $productLineTotal = $productQuantity * $productInfo['price'];
-                    $productLink = $productInfo['link'];
-                    $productName = $productInfo['name'];
-                    $totalPrice += $productLineTotal;
+                $productId = $productInCart['product_id'];
+                $productInfo = $this->productModel->getProductInfo($productId);
+                $productQuantity = $productInCart['quantity'];
+                $productLineTotal = $productQuantity * $productInfo['price'];
+                $productLink = $productInfo['link'];
+                $productName = $productInfo['name'];
+                $totalPrice += $productLineTotal;
                 ?>
                 <tr class="productitm">
                     <form action="/delete-product" method="POST">
                         <td><img src="<?php echo $productLink; ?>"></td>
                         <td><input type="number" value="<?php echo $productQuantity; ?>" min="1" max="99" class="qtyinput"></td>
                         <td><?php echo $productName; ?></td>
+                        <label style="color: red"><?php echo $errors['add_product'] ?? ''; ?></label>
                         <td><?php echo number_format($productLineTotal, 0, ',', ' '); ?>₽</td>
+                        <td>
                             <span class="remove">
+                            <label style="color: red"><?php echo $errors['delete'] ?? ''; ?>
                                 <button type="submit" class="delete-button" name="product_id" value="<?php echo $productInCart['product_id']; ?>">
                                     <img src="https://i.imgur.com/h1ldGRr.png" alt="X">
                                 </button>
@@ -61,6 +64,7 @@
     </div>
 </div>
 </body>
+
 
 <style>
     @import url(https://fonts.googleapis.com/css?family=Fredoka+One);
