@@ -48,7 +48,7 @@ class PlaceOrderController
         if (!isset($_SESSION['user_id'])) {
             header("Location: /login");
         } else {
-            $errors = $request->validate();//доделать
+            $errors = $request->validate();
 
             $userId = $_SESSION['user_id'];
             $cart = $this->cartModel->getCart($userId);

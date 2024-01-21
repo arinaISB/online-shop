@@ -9,7 +9,7 @@ class MainController
 
     public function __construct()
     {
-        $this->productModel = new Product();
+        $this->productModel = new Product(0,'',0,'');
     }
 
     public function getProducts(): void

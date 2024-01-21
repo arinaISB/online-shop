@@ -2,6 +2,7 @@
 
 namespace Model;
 
+
 class User extends Model
 {
     private int $id;
@@ -12,7 +13,6 @@ class User extends Model
 
     public function __construct(int $id, string $name, string $email, string $password)
     {
-        parent::__construct();
         $this->id = $id;
         $this->name = $name;
         $this->email = $email;
@@ -21,7 +21,7 @@ class User extends Model
 
     public function getOneByEmail(string $email): User|null
     {
-        $statement = $this->pdo->prepare("SELECT * FROM users WHERE email = :email");
+        $statement = self::getPdo()->prepare("SELECT * FROM users WHERE email = :email");
         $statement->execute(['email' => $email]);
         $result = $statement->fetch();
 
@@ -34,7 +34,7 @@ class User extends Model
 
     public function addUser(string $email, string $name, string $password): void
     {
-        $statement = $this->pdo->prepare("INSERT INTO users (name, email, password) VALUES (:name, :email, :password)");
+        $statement = self::getPdo()->prepare("INSERT INTO users (name, email, password) VALUES (:name, :email, :password)");
         $statement->execute(['name' => $name, 'email' => $email, 'password' => $password]);
     }
 

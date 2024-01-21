@@ -5,15 +5,24 @@ use PDO;
 
 class Model
 {
-    protected PDO $pdo;
+    protected static PDO $pdo;
 
-    public function __construct()
+    public static function pdoInitialize(): void
     {
         $host = getenv('DB_HOST');
         $dbname = getenv('DB_DATABASE');
         $dbuser= getenv('DB_USERNAME');
         $dbpassword = getenv('DB_PASSWORD');
 
-        $this->pdo = new PDO("pgsql:host=$host;port=5432;dbname=$dbname", "$dbuser", "$dbpassword");
+        self::$pdo = new PDO("pgsql:host=$host;port=5432;dbname=$dbname", "$dbuser", "$dbpassword");
+    }
+
+    public static function getPdo(): PDO
+    {
+        if (!isset(self::$pdo))
+        {
+            self::pdoInitialize();
+        }
+        return self::$pdo;
     }
 }

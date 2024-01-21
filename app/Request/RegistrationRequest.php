@@ -6,7 +6,6 @@ use Model\User;
 
 class RegistrationRequest extends Request
 {
-
     private User $modelUser;
 
     public function __construct(array $body)
