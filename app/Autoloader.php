@@ -12,6 +12,7 @@ class Autoloader
             //echo dirname(__DIR__); родителькая директория
 
             $path = $dir . '/' . $path . '.php';
+
             if (file_exists($path))
             {
                 require_once $path;

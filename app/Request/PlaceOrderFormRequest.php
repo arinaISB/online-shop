@@ -8,8 +8,27 @@ class PlaceOrderFormRequest extends Request
     {
         $errors = [];
 
-        if (empty($this->body)) {
-            $errors[] = 'Error: Empty body';
+        if (empty($this->getEmail()))
+        {
+            $errors['checkout-email'] = 'Error: Empty body';
+        } elseif (empty($this->getPhone()))
+        {
+            $errors['checkout-phone'] = 'Error: Empty body';
+        } elseif (empty($this->getName()))
+        {
+            $errors['checkout-name'] = 'Error: Empty body';
+        } elseif (empty($this->getAddress()))
+        {
+            $errors['checkout-address'] = 'Error: Empty body';
+        } elseif (empty($this->getCity()))
+        {
+            $errors['checkout-city'] = 'Error: Empty body';
+        } elseif (empty($this->getCountry()))
+        {
+            $errors['checkout-country'] = 'Error: Empty body';
+        } elseif (empty($this->getPostal()))
+        {
+            $errors['checkout-postal'] = 'Error: Empty body';
         }
 
         return $errors;

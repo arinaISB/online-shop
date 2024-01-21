@@ -45,20 +45,18 @@ class PlaceOrderController
     public function placeOrderForm(PlaceOrderFormRequest $request)
     {
         session_start();
-        if (!isset($_SESSION['user_id']))
-        {
+        if (!isset($_SESSION['user_id'])) {
             header("Location: /login");
         } else {
-            $errors = $request->validate();
+            $errors = $request->validate();//доделать
 
-            if (empty($errors))
-            {
-                $userId = $_SESSION['user_id'];
-                $cart = $this->cartModel->getCart($userId);
-                $productsInCart = $this->cartProductModel->getProductsInCart($cart['id']);
-                $totalPrice = $this->calculateTotalPrice($productsInCart);
-                $placedOrderId = $this->createPlacedOrder($request, $totalPrice);
+            $userId = $_SESSION['user_id'];
+            $cart = $this->cartModel->getCart($userId);
+            $productsInCart = $this->cartProductModel->getProductsInCart($cart['id']);
+            $totalPrice = $this->calculateTotalPrice($productsInCart);
+            $placedOrderId = $this->createPlacedOrder($request, $totalPrice);
 
+            if (empty($errors)) {
                 foreach ($productsInCart as $productInCart) {
                     $productId = $productInCart['product_id'];
                     $quantity = $productInCart['quantity'];
@@ -67,9 +65,9 @@ class PlaceOrderController
                     $this->orderedCart->addOrderedItems($placedOrderId, $productId, $quantity, $productLineTotal);
                     $this->cartProductModel->deleteProduct($cart['id'], $productId);
                 }
+                header("Location: /main");
             }
-
-            header("Location: /main");
+            require_once './../View/place_order.php';
         }
     }
 

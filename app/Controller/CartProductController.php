@@ -38,10 +38,10 @@ class CartProductController
             header("Location: /login");
         } else {
             $errors = $request->validate();
-            $products = $this->productModel->getAll();
 
             if (empty($errors))
             {
+                $products = $this->productModel->getAll();
                 $productId = $request->getProductId();
                 $quantity = $request->getQuantity();
 

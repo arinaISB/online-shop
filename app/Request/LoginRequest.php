@@ -12,7 +12,7 @@ class LoginRequest extends Request
     public function __construct(array $body)
     {
         parent::__construct($body);
-        $this->modelUser = new User();
+        $this->modelUser = new User(0, '', '', '');
     }
 
     public function validate(): array
@@ -29,7 +29,7 @@ class LoginRequest extends Request
         } elseif (empty($this->body)) {
             $errors['email'] = 'You are not registered';
         } else {
-            if (!password_verify($password, $user['password'])) {
+            if (!password_verify($password, $user->getPassword())) {
                 $errors['password'] = 'Invalid password or email';
             }
         }

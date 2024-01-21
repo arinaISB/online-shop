@@ -12,7 +12,7 @@ class RegistrationRequest extends Request
     public function __construct(array $body)
     {
         parent::__construct($body);
-        $this->modelUser = new User();
+        $this->modelUser = new User(0, '', '', '');
     }
 
     public function validate(): array

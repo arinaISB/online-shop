@@ -11,7 +11,7 @@ class UserController
 
     public function __construct()
     {
-        $this->modelUser = new User();
+        $this->modelUser = new User(0, '', '', '');
     }
     public function getRegistration(): void
     {
@@ -48,10 +48,9 @@ class UserController
             $password = $request->getPassword();
             $email = $request->getEmail();
             $user = $this->modelUser->getOneByEmail($email);
-            //setcookie('user_id', $data['id']);  небезопасно!
             if ($user) {
                 session_start();
-                $_SESSION['user_id'] = $user['id'];
+                $_SESSION['user_id'] = $user->getId();
                 header("Location: /main");
             }
         }

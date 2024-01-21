@@ -12,6 +12,7 @@
                 <div>
                     <span class="fa fa-envelope"></span>
                     <input type="email" id="checkout-email" name="checkout-email" placeholder="Enter your email...">
+                    <label style="color: red"><?php echo $errors['checkout-email'] ?? ''; ?></label>
                 </div>
             </div>
             <div class="form-control">

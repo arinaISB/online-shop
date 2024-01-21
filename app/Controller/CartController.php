@@ -12,6 +12,7 @@ class CartController
 {
     private Cart $cartModel;
     private CartProduct $cartProductModel;
+    private Product $productModel;
 
     public function __construct()
     {
