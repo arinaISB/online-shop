@@ -4,23 +4,12 @@ namespace Controller;
 
 use Model\Cart;
 use Model\CartProduct;
-use Model\Product;
 use Request\DeleteProductRequest;
+use Service\CartViewService;
 
 
 class CartController
 {
-    private Cart $cartModel;
-    private CartProduct $cartProductModel;
-    private Product $productModel;
-
-    public function __construct()
-    {
-        $this->cartProductModel = new CartProduct();
-        $this->cartModel = new Cart();
-        $this->productModel = new Product();
-    }
-
     public function getCartForm(): void
     {
         session_start();
@@ -28,8 +17,9 @@ class CartController
             header("Location: /login");
         } else {
             $userId = $_SESSION['user_id'];
-            $cart = $this->cartModel->getCart($userId);
-            $productsInCart = $this->cartProductModel->getProductsInCart($cart['id']);
+            $cart = Cart::getCart($userId);
+            $productsInCart = CartProduct::getProductsInCart($cart->getId());
+            $viewData = CartViewService::viewProductsInCart($productsInCart);
 
             require_once './../View/cart.php';
         }
@@ -46,9 +36,9 @@ class CartController
             if (empty($errors))
             {
                 $userId = $_SESSION['user_id'];
-                $cart = $this->cartModel->getCart($userId);
+                $cart = Cart::getCart($userId);
                 $productId = $request->getProductId();
-                $this->cartProductModel->deleteProduct($cart['id'], $productId);
+                CartProduct::deleteProduct($cart->getId(), $productId);
 
                 header("Location: /cart");
             }

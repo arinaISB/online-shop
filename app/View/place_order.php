@@ -12,7 +12,7 @@
                 <div>
                     <span class="fa fa-envelope"></span>
                     <input type="email" id="checkout-email" name="checkout-email" placeholder="Enter your email...">
-                    <label style="color: red"><?php echo $errors['checkout-email'] ?? ''; ?></label>
+                    <label style="color: red"><echo $errors['checkout-email'] ?? ''; ?></label>
                 </div>
             </div>
             <div class="form-control">
@@ -81,25 +81,13 @@
     <section class="checkout-details">
         <div class="checkout-details-inner">
             <div class="checkout-lists">
-                <?php
-                $totalPrice = 0;
-                ?>
-                <?php foreach ($productsInCart as $productInCart): ?>
-                <?php
-                    $productId = $productInCart['product_id'];
-                    $productInfo = $this->productModel->getProductInfo($productId);
-                    $productQuantity = $productInCart['quantity'];
-                    $productLineTotal = $productQuantity * $productInfo['price'];
-                    $productLink = $productInfo['link'];
-                    $productName = $productInfo['name'];
-                    $totalPrice += $productLineTotal;
-                ?>
+                <?php foreach ($viewData['products'] as $product): ?>
                     <tr class="productitm">
                         <form action="/delete-product" method="POST">
-                            <td><img src="<?php echo $productLink; ?>"width="100" height="100"><br></td>
-                            <td>Количество: <?php echo $productQuantity;?><br></td>
-                            <td><?php echo $productName; ?></td>
-                            <td><?php echo number_format($productLineTotal, 0, ',', ' '); ?>₽</td>
+                            <td><img src="<?php echo $product['link']; ?>"width="100" height="100"><br></td>
+                            <td>Количество: <?php echo $product['quantity'];?><br></td>
+                            <td><?php echo $product['name']; ?></td>
+                            <td><?php echo number_format($product['lineTotal'], 0, ',', ' '); ?>₽</td>
                         </form>
                     </tr>
                 <?php endforeach;?>
@@ -107,7 +95,7 @@
             <tr class="totalprice">
                 <td class="light">Total:</td>
                 <td colspan="2">&nbsp;</td>
-                <td colspan="2"><?php echo number_format($totalPrice, 0, ',', ' '); ?>₽</span></td>
+                <td colspan="2"><?php echo number_format($viewData['totalPrice'], 0, ',', ' '); ?>₽</span></td>
             </tr>
         </div>
     </section>

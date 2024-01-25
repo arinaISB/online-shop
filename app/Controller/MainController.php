@@ -5,13 +5,6 @@ use Model\Product;
 
 class MainController
 {
-    private Product $productModel;
-
-    public function __construct()
-    {
-        $this->productModel = new Product(0,'',0,'');
-    }
-
     public function getProducts(): void
     {
         session_start();
@@ -19,7 +12,7 @@ class MainController
         {
             header("Location: /login");
         } else {
-            $products = $this->productModel->getAll();
+            $products = Product::getAll();
 
             require_once './../View/main.php';
         }

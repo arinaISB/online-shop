@@ -19,27 +19,18 @@
             <?php
             $totalPrice = 0;
             ?>
-            <?php foreach ($productsInCart as $productInCart): ?>
-                <?php
-                $productId = $productInCart['product_id'];
-                $productInfo = $this->productModel->getProductInfo($productId);
-                $productQuantity = $productInCart['quantity'];
-                $productLineTotal = $productQuantity * $productInfo['price'];
-                $productLink = $productInfo['link'];
-                $productName = $productInfo['name'];
-                $totalPrice += $productLineTotal;
-                ?>
+            <?php foreach ($viewData['products'] as $product): ?>
                 <tr class="productitm">
                     <form action="/delete-product" method="POST">
-                        <td><img src="<?php echo $productLink; ?>"></td>
-                        <td><input type="number" value="<?php echo $productQuantity; ?>" min="1" max="99" class="qtyinput"></td>
-                        <td><?php echo $productName; ?></td>
+                        <td><img src="<?php echo $product['link']; ?>"></td>
+                        <td><input type="number" value="<?php echo $product['quantity']; ?>" min="1" max="99" class="qtyinput"></td>
+                        <td><?php echo $product['name']; ?></td>
                         <label style="color: red"><?php echo $errors['add_product'] ?? ''; ?></label>
-                        <td><?php echo number_format($productLineTotal, 0, ',', ' '); ?>₽</td>
+                        <td><?php echo number_format($product['lineTotal'], 0, ',', ' '); ?>₽</td>
                         <td>
                             <span class="remove">
                             <label style="color: red"><?php echo $errors['delete'] ?? ''; ?>
-                                <button type="submit" class="delete-button" name="product_id" value="<?php echo $productInCart['product_id']; ?>">
+                                <button type="submit" class="delete-button" name="product_id" value="<?php echo $product['id']; ?>">
                                     <img src="https://i.imgur.com/h1ldGRr.png" alt="X">
                                 </button>
                             </span>
@@ -52,7 +43,7 @@
             <tr class="totalprice">
                 <td class="light">Total:</td>
                 <td colspan="2">&nbsp;</td>
-                <td colspan="2"><?php echo number_format($totalPrice, 0, ',', ' '); ?>₽</span></td>
+                <td colspan="2"><?php echo number_format($viewData['totalPrice'], 0, ',', ' '); ?>₽</span></td>
             </tr>
 
             <!-- checkout btn -->

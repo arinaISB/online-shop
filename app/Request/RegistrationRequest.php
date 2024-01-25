@@ -6,12 +6,9 @@ use Model\User;
 
 class RegistrationRequest extends Request
 {
-    private User $modelUser;
-
     public function __construct(array $body)
     {
         parent::__construct($body);
-        $this->modelUser = new User(0, '', '', '');
     }
 
     public function validate(): array
@@ -34,7 +31,7 @@ class RegistrationRequest extends Request
             $errors['email'] = "Email is invalid";
         } else
         {
-            $existingUser = $this->modelUser->getOneByEmail($email);
+            $existingUser = User::getOneByEmail($email);
             if ($existingUser) {
                 $errors['email'] = "Email already exists";
             }

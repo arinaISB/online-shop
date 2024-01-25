@@ -4,37 +4,17 @@ namespace Model;
 
 class Product extends Model
 {
-//    private int $id;
-//    private string $name;
-//    private int $price;
-//
-//
-//    public function __construct(int $id, string $name, int $price, string $link)
-//    {
-//        parent::__construct();
-//        $this->id = $id;
-//        $this->name = $name;
-//        $this->price = $price;
-//        $this->link = $link;
-//    }
+    private int $id;
+    private string $name;
+    private int $price;
+    private string $link;
 
-    public function getAll()
+    public function __construct(int $id, string $name, int $price, string $link)
     {
-        $statement = self::getPdo()->prepare("SELECT * FROM products");
-        $statement->execute();
-        $result = $statement->fetchAll();
-        if (empty($result)) {
-            return null;
-        }
-        return $result;
-//        return new Product($result['id'], $result['name'], $result['price'], $result['link']);
-    }
-
-    public function getProductInfo(int $id)
-    {
-        $statement = self::getPdo()->prepare("SELECT * FROM products WHERE id = :id");
-        $statement->execute(['id' => $id]);
-        return $statement->fetch();
+        $this->id = $id;
+        $this->name = $name;
+        $this->price = $price;
+        $this->link = $link;
     }
 
     public function getId(): int
@@ -58,5 +38,35 @@ class Product extends Model
         return $this->link;
     }
 
-    private string $link;
+    public static function getAll(): array|null
+    {
+        $statement = self::getPdo()->query("SELECT * FROM products");
+        $products = $statement->fetchAll();
+
+        if (empty($products))
+        {
+            return null;
+        }
+
+        $result = [];
+        foreach ($products as $product) {
+            $result[] = new Product($product['id'], $product['name'], $product['price'], $product['link']);
+        }
+
+        return $result;
+    }
+
+    public static function getProductInfo(int $id): Product|null
+    {
+        $statement = self::getPdo()->prepare("SELECT * FROM products WHERE id = :id");
+        $statement->execute(['id' => $id]);
+        $productInfo = $statement->fetch();
+
+        if (empty($productInfo))
+        {
+            return null;
+        }
+
+        return new Product($productInfo['id'], $productInfo['name'], $productInfo['price'], $productInfo['link']);
+    }
 }

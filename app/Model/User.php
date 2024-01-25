@@ -2,7 +2,6 @@
 
 namespace Model;
 
-
 class User extends Model
 {
     private int $id;
@@ -17,25 +16,6 @@ class User extends Model
         $this->name = $name;
         $this->email = $email;
         $this->password = $password;
-    }
-
-    public function getOneByEmail(string $email): User|null
-    {
-        $statement = self::getPdo()->prepare("SELECT * FROM users WHERE email = :email");
-        $statement->execute(['email' => $email]);
-        $result = $statement->fetch();
-
-        if (empty($result)) {
-            return null;
-        }
-
-        return new User($result['id'], $result['name'], $result['email'], $result['password']);
-    }
-
-    public function addUser(string $email, string $name, string $password): void
-    {
-        $statement = self::getPdo()->prepare("INSERT INTO users (name, email, password) VALUES (:name, :email, :password)");
-        $statement->execute(['name' => $name, 'email' => $email, 'password' => $password]);
     }
 
     public function getId(): int
@@ -56,5 +36,37 @@ class User extends Model
     public function getPassword(): string
     {
         return $this->password;
+    }
+
+    public static function getOneByEmail(string $email): User|null
+    {
+        $statement = static::getPdo()->prepare("SELECT * FROM users WHERE email = :email");
+        $statement->execute(['email' => $email]);
+        $result = $statement->fetch();
+
+        if (empty($result)) {
+            return null;
+        }
+        return new User($result['id'], $result['name'], $result['email'], $result['password']);
+    }
+
+    public static function getById(int $id)
+    {
+        $statement = static::getPdo()->prepare("SELECT * FROM users WHERE id = :id");
+        $statement->execute(['id' => $id]);
+        $result = $statement->fetch();
+
+        if (!$result)
+        {
+            return null;
+        }
+
+        return new User($result['id'], $result['name'], $result['email'], $result['password']);
+    }
+
+    public static function addUser(string $email, string $name, string $password): void
+    {
+        $statement = static::getPdo()->prepare("INSERT INTO users (name, email, password) VALUES (:name, :email, :password)");
+        $statement->execute(['name' => $name, 'email' => $email, 'password' => $password]);
     }
 }

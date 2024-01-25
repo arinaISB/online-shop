@@ -4,15 +4,17 @@ namespace Controller;
 use Model\User;
 use Request\LoginRequest;
 use Request\RegistrationRequest;
+use Service\AuthenticationService;
 
 class UserController
 {
-    private User $modelUser;
+    private AuthenticationService $authenticationService;
 
     public function __construct()
     {
-        $this->modelUser = new User(0, '', '', '');
+        $this->authenticationService = new AuthenticationService();
     }
+
     public function getRegistration(): void
     {
         require_once './../View/registration.php';
@@ -27,7 +29,14 @@ class UserController
             $email = $request->getEmail();
             $password = $request->getPassword();
             $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
-            $this->modelUser->addUser($email, $name, $hashedPassword);
+
+            User::addUser($email, $name, $hashedPassword);
+
+            $result = $this->authenticationService->login($password);
+            if (!$result)
+            {
+                $errors['email'] = 'Invalid login or password';
+            }
 
             header("Location: /login");
         }
@@ -47,11 +56,15 @@ class UserController
         {
             $password = $request->getPassword();
             $email = $request->getEmail();
-            $user = $this->modelUser->getOneByEmail($email);
-            if ($user) {
-                session_start();
-                $_SESSION['user_id'] = $user->getId();
+            $user = User::getOneByEmail($email);
+
+            $result = $this->authenticationService->login($password);
+
+            if ($result)
+            {
                 header("Location: /main");
+            } else {
+                $errors['password'] = 'Invalid password or email';
             }
         }
 

@@ -14,7 +14,7 @@ class DeleteProductRequest extends Request
         return $errors;
     }
 
-    public function getProductId()
+    public function getProductId(): int
     {
         return $this->body['product_id'];
     }

@@ -14,15 +14,15 @@ class Model
         $dbuser= getenv('DB_USERNAME');
         $dbpassword = getenv('DB_PASSWORD');
 
-        self::$pdo = new PDO("pgsql:host=$host;port=5432;dbname=$dbname", "$dbuser", "$dbpassword");
+        static::$pdo = new PDO("pgsql:host=$host;port=5432;dbname=$dbname", "$dbuser", "$dbpassword");
     }
 
     public static function getPdo(): PDO
     {
-        if (!isset(self::$pdo))
+        if (!isset(static::$pdo))
         {
-            self::pdoInitialize();
+            static::pdoInitialize();
         }
-        return self::$pdo;
+        return static::$pdo;
     }
 }

@@ -6,16 +6,16 @@
                 <!--<div class="card-header">
                     Hit!
                 </div> -->
-                <img class="card-img-top" src="<?php echo $product['link']; ?>" alt="Card image">
+                <img class="card-img-top" src="<?php echo $product->getLink(); ?>" alt="Card image">
                 <div class="card-body">
-                    <p class="card-text text-muted"><?php echo $product['name']; ?></p>
+                    <p class="card-text text-muted"><?php echo $product->getName(); ?></p>
                     <!--<a href="#"><h5 class="card-title">Very long item name</h5></a>-->
                     <div class="card-footer">
-                        <?php echo $product['price']; ?> ₽
+                        <?php echo $product->getPrice(); ?> ₽
                     </div>
                     <div class="add">
                         <form action="/add-product" method="POST">
-                            <input type="hidden" name="product_id" value="<?php echo $product['id']; ?>">
+                            <input type="hidden" name="product_id" value="<?php echo $product->getId(); ?>">
                             <label style="color: red"><?php echo $errors['add_product'] ?? ''; ?></label>
                             <label>
                                 <input type="number" name="quantity" value="1" min="1">

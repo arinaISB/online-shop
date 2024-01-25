@@ -5,18 +5,15 @@ use Model\Cart;
 use Model\CartProduct;
 use Model\Product;
 use Request\AddProductRequest;
+use Service\AuthenticationService;
 
 class CartProductController
 {
-    private CartProduct $cartProductModel;
-    private Cart $cartModel;
-    private Product $productModel;
+    private AuthenticationService $authenticationService;
 
     public function __construct()
     {
-        $this->cartProductModel = new CartProduct();
-        $this->cartModel = new Cart();
-        $this->productModel = new Product();
+        $this->authenticationService = new AuthenticationService();
     }
 
     public function getAddProductForm(): void
@@ -32,41 +29,41 @@ class CartProductController
 
     public function addProduct(AddProductRequest $request): void
     {
-        session_start();
-        if (!isset($_SESSION['user_id']))
+        $result = $this->authenticationService->check();
+
+        if (!$result)
         {
             header("Location: /login");
-        } else {
-            $errors = $request->validate();
+        }
 
-            if (empty($errors))
-            {
-                $products = $this->productModel->getAll();
-                $productId = $request->getProductId();
-                $quantity = $request->getQuantity();
+        $errors = $request->validate();
 
-                $userId = $_SESSION['user_id'];
-                $cart = $this->cartModel->getCart($userId);
+        if (empty($errors))
+        {
+            $products = Product::getAll();
+            $productId = $request->getProductId();
+            $quantity = $request->getQuantity();
 
-                if (!empty($cart)) {
-                    $cartProduct = $this->cartProductModel->getCartProduct($cart['id'], $productId);
+            $userId = $this->authenticationService->getCurrentUserId();
+            $cart = Cart::getCart($userId);
 
-                    if (empty($cartProduct)) {
-                        $this->cartProductModel->addCartProducts($cart['id'], $productId, $quantity);
-                    } else {
-                        $currentQuantity = $cartProduct['quantity'];
-                        $newQuantity = $currentQuantity + $quantity;
-                        $this->cartProductModel->updateProductQuantity($cart['id'], $productId, $newQuantity);
-                    }
+            if (!empty($cart)) {
+                $cartProduct = CartProduct::getCartProduct($cart->getId(), $productId);
+
+                if (empty($cartProduct)) {
+                    CartProduct::addCartProducts($cart->getId(), $productId, $quantity);
                 } else {
-                    $this->cartModel->createCart($userId);
-                    $cart = $this->cartModel->getCart($userId);
-                    $this->cartProductModel->addCartProducts($cart['id'], $productId, $quantity);
+                    $currentQuantity = $cartProduct['quantity'];
+                    $newQuantity = $currentQuantity + $quantity;
+                    CartProduct::updateProductQuantity($cart->getId(), $productId, $newQuantity);
                 }
-
-                header("Location: /main");
+            } else {
+                Cart::createCart($userId);
+                $cart = Cart::getCart($userId);
+                CartProduct::addCartProducts($cart->getId(), $productId, $quantity);
             }
 
+            header("Location: /main");
             require_once './../View/main.php';
         }
     }

@@ -8,24 +8,10 @@ use Model\OrderedCart;
 use Model\PlacedOrder;
 use Model\Product;
 use Request\PlaceOrderFormRequest;
+use Service\CartViewService;
 
 class PlaceOrderController
 {
-    private Cart $cartModel;
-    private CartProduct $cartProductModel;
-    private Product $productModel;
-    private PlacedOrder $placedOrder;
-    private OrderedCart $orderedCart;
-
-    public function __construct()
-    {
-        $this->cartProductModel = new CartProduct();
-        $this->cartModel = new Cart();
-        $this->productModel = new Product();
-        $this->placedOrder = new PlacedOrder();
-        $this->orderedCart = new OrderedCart();
-    }
-
     public function getPlaceOrderForm(): void
     {
         session_start();
@@ -34,15 +20,15 @@ class PlaceOrderController
             header("Location: /login");
         } else {
             $userId = $_SESSION['user_id'];
-            $cart = $this->cartModel->getCart($userId);
-            $productsInCart = $this->cartProductModel->getProductsInCart($cart['id']);
-            $totalPrice = $this->calculateTotalPrice($productsInCart);
+            $cart = Cart::getCart($userId);
+            $productsInCart = CartProduct::getProductsInCart($cart->getId());
+            $viewData = CartViewService::viewProductsInCart($productsInCart);
 
             require_once './../View/place_order.php';
         }
     }
 
-    public function placeOrderForm(PlaceOrderFormRequest $request)
+    public function placeOrderForm(PlaceOrderFormRequest $request): void
     {
         session_start();
         if (!isset($_SESSION['user_id'])) {
@@ -51,19 +37,18 @@ class PlaceOrderController
             $errors = $request->validate();
 
             $userId = $_SESSION['user_id'];
-            $cart = $this->cartModel->getCart($userId);
-            $productsInCart = $this->cartProductModel->getProductsInCart($cart['id']);
-            $totalPrice = $this->calculateTotalPrice($productsInCart);
+            $cart = Cart::getCart($userId);
+            $productsInCart = CartProduct::getProductsInCart($cart->getId());
+            $totalPrice = CartViewService::calculateTotalPrice($productsInCart);
             $placedOrderId = $this->createPlacedOrder($request, $totalPrice);
 
             if (empty($errors)) {
                 foreach ($productsInCart as $productInCart) {
                     $productId = $productInCart['product_id'];
-                    $quantity = $productInCart['quantity'];
-                    $productInfo = $this->productModel->getProductInfo($productId);
-                    $productLineTotal = $quantity * $productInfo['price'];
-                    $this->orderedCart->addOrderedItems($placedOrderId, $productId, $quantity, $productLineTotal);
-                    $this->cartProductModel->deleteProduct($cart['id'], $productId);
+                    $productInfo = Product::getProductInfo($productId);
+                    $productLineTotal = $productInCart['quantity'] * $productInfo->getPrice();
+                    OrderedCart::addOrderedItems($placedOrderId, $productId, $productInCart['quantity'], $productLineTotal);
+                    CartProduct::deleteProduct($cart->getId(), $productId);
                 }
                 header("Location: /main");
             }
@@ -71,20 +56,6 @@ class PlaceOrderController
         }
     }
 
-    private function calculateTotalPrice($productsInCart): float|int
-    {
-        $totalPrice = 0;
-
-        foreach ($productsInCart as $productInCart) {
-            $productId = $productInCart['product_id'];
-            $productInfo = $this->productModel->getProductInfo($productId);
-            $quantity = $productInCart['quantity'];
-            $productLineTotal = $quantity * $productInfo['price'];
-            $totalPrice += $productLineTotal;
-        }
-
-        return $totalPrice;
-    }
 
     private function createPlacedOrder(PlaceOrderFormRequest $request, $totalPrice): string
     {
@@ -96,6 +67,6 @@ class PlaceOrderController
         $country = $request->getCountry();
         $postal = $request->getPostal();
 
-        return $this->placedOrder->addAndGetPlacedOrder($totalPrice, $email, $phone, $userName, $address, $city, $country, $postal);
+        return PlacedOrder::addAndGetPlacedOrder($totalPrice, $email, $phone, $userName, $address, $city, $country, $postal);
     }
 }
