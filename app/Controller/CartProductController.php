@@ -18,17 +18,6 @@ class CartProductController
 
     public function getAddProductForm(): void
     {
-        session_start();
-        if (!isset($_SESSION['user_id']))
-        {
-            header("Location: /login");
-        } else {
-            require_once './../View/main.php';
-        }
-    }
-
-    public function addProduct(AddProductRequest $request): void
-    {
         $result = $this->authenticationService->check();
 
         if (!$result)
@@ -36,6 +25,11 @@ class CartProductController
             header("Location: /login");
         }
 
+        require_once './../View/main.php';
+    }
+
+    public function addProduct(AddProductRequest $request): void
+    {
         $errors = $request->validate();
 
         if (empty($errors))
@@ -44,7 +38,7 @@ class CartProductController
             $productId = $request->getProductId();
             $quantity = $request->getQuantity();
 
-            $userId = $this->authenticationService->getCurrentUserId();
+            $userId = $this->authenticationService->getCurrentUser()->getId();
             $cart = Cart::getCart($userId);
 
             if (!empty($cart)) {
@@ -53,7 +47,7 @@ class CartProductController
                 if (empty($cartProduct)) {
                     CartProduct::addCartProducts($cart->getId(), $productId, $quantity);
                 } else {
-                    $currentQuantity = $cartProduct['quantity'];
+                    $currentQuantity = $cartProduct->getQuantity();
                     $newQuantity = $currentQuantity + $quantity;
                     CartProduct::updateProductQuantity($cart->getId(), $productId, $newQuantity);
                 }

@@ -2,7 +2,6 @@
 
 namespace Service;
 
-use Model\CartProduct;
 use Model\Product;
 
 class CartViewService

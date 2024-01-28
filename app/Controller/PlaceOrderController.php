@@ -8,52 +8,70 @@ use Model\OrderedCart;
 use Model\PlacedOrder;
 use Model\Product;
 use Request\PlaceOrderFormRequest;
+use Service\AuthenticationService;
 use Service\CartViewService;
 
 class PlaceOrderController
 {
+    private AuthenticationService $authenticationService;
+
+    public function __construct()
+    {
+        $this->authenticationService = new AuthenticationService();
+    }
+
     public function getPlaceOrderForm(): void
     {
-        session_start();
-        if (!isset($_SESSION['user_id']))
+        $result = $this->authenticationService->check();
+
+        if (!$result)
         {
             header("Location: /login");
-        } else {
-            $userId = $_SESSION['user_id'];
-            $cart = Cart::getCart($userId);
-            $productsInCart = CartProduct::getProductsInCart($cart->getId());
-            $viewData = CartViewService::viewProductsInCart($productsInCart);
-
-            require_once './../View/place_order.php';
         }
+
+        $userId = $_SESSION['user_id'];
+        $cart = Cart::getCart($userId);
+        $productsInCart = CartProduct::getProductsInCart($cart->getId());
+
+        if (empty($productsInCart))
+        {
+            $errors = "Cart is empty";
+        } else {
+            $viewData = CartViewService::viewProductsInCart($productsInCart);
+        }
+
+        require_once './../View/place_order.php';
+
     }
 
     public function placeOrderForm(PlaceOrderFormRequest $request): void
     {
-        session_start();
-        if (!isset($_SESSION['user_id'])) {
+        $result = $this->authenticationService->check();
+
+        if (!$result)
+        {
             header("Location: /login");
-        } else {
-            $errors = $request->validate();
-
-            $userId = $_SESSION['user_id'];
-            $cart = Cart::getCart($userId);
-            $productsInCart = CartProduct::getProductsInCart($cart->getId());
-            $totalPrice = CartViewService::calculateTotalPrice($productsInCart);
-            $placedOrderId = $this->createPlacedOrder($request, $totalPrice);
-
-            if (empty($errors)) {
-                foreach ($productsInCart as $productInCart) {
-                    $productId = $productInCart['product_id'];
-                    $productInfo = Product::getProductInfo($productId);
-                    $productLineTotal = $productInCart['quantity'] * $productInfo->getPrice();
-                    OrderedCart::addOrderedItems($placedOrderId, $productId, $productInCart['quantity'], $productLineTotal);
-                    CartProduct::deleteProduct($cart->getId(), $productId);
-                }
-                header("Location: /main");
-            }
-            require_once './../View/place_order.php';
         }
+
+        $errors = $request->validate();
+
+        $userId = $_SESSION['user_id'];
+        $cart = Cart::getCart($userId);
+        $productsInCart = CartProduct::getProductsInCart($cart->getId());
+        $totalPrice = CartViewService::calculateTotalPrice($productsInCart);
+        $placedOrderId = $this->createPlacedOrder($request, $totalPrice);
+
+        if (empty($errors)) {
+            foreach ($productsInCart as $productInCart) {
+                $productId = $productInCart->getProductId();
+                $productInfo = Product::getProductInfo($productId);
+                $productLineTotal = $productInCart->getQuantity() * $productInfo->getPrice();
+                OrderedCart::addOrderedItems($placedOrderId, $productId, $productInCart->getQuantity(), $productLineTotal);
+                CartProduct::deleteProduct($cart->getId(), $productId);
+            }
+            header("Location: /main");
+        }
+        require_once './../View/place_order.php';
     }
 
 

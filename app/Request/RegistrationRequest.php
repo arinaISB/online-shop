@@ -6,11 +6,6 @@ use Model\User;
 
 class RegistrationRequest extends Request
 {
-    public function __construct(array $body)
-    {
-        parent::__construct($body);
-    }
-
     public function validate(): array
     {
         $errors = [];

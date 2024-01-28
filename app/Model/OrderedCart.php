@@ -44,22 +44,17 @@ class OrderedCart extends Model
         return $this->productLineTotal;
     }
 
-    public static function addOrderedItems(int $placedOrderId, int $productId, int $quantity, int $productLineTotal): array|null
+    public static function addOrderedItems(int $placedOrderId, int $productId, int $quantity, int $productLineTotal): OrderedCart|null
     {
-        $statement = self::getPdo()->prepare("INSERT INTO ordered_items (placed_order_id, product_id, quantity, line_total) VALUES (:placed_order_id, :product_id, :quantity, :line_total)");
+        $statement = static::getPdo()->prepare("INSERT INTO ordered_items (placed_order_id, product_id, quantity, line_total) VALUES (:placed_order_id, :product_id, :quantity, :line_total)");
         $statement->execute(['placed_order_id' => $placedOrderId, 'product_id' => $productId, 'quantity' => $quantity, 'line_total' => $productLineTotal]);
-        $data = $statement->fetchAll();
+        $data = $statement->fetch();
 
         if (empty($data))
         {
             return null;
         }
 
-        $result = [];
-        foreach ($data as $product) {
-            $result[] = new OrderedCart($product['id'], $product['placed_order_id'], $product['product_id'], $product['quantity'], $product['line_total']);
-        }
-
-        return $result;
+        return new OrderedCart($data['id'], $data['placed_order_id'], $data['product_id'], $data['quantity'], $data['line_total']);
     }
 }

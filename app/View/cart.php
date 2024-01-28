@@ -3,6 +3,20 @@
     <header id="title">
         <h1>Shopping Cart</h1>
     </header>
+    <?php if (!empty($errors)): ?>
+        <div id="errors">
+            <?php if (isset($errors['userId'])): ?>
+                <p><?php echo $errors['userId']; ?></p>
+            <?php endif; ?>
+            <?php if (isset($errors['cart'])): ?>
+                <p><?php echo $errors['cart']; ?></p>
+            <?php endif; ?>
+            <?php if (isset($errors['productsInCart'])): ?>
+                <p><?php echo $errors['productsInCart']; ?></p>
+            <?php endif; ?>
+        </div>
+        <p>Get back <a href="/main">Main</a>.</p>
+    <?php else: ?>
     <div id="page">
         <table id="cart">
             <thead>
@@ -16,9 +30,6 @@
             </thead>
             <tbody>
             <!-- shopping cart contents -->
-            <?php
-            $totalPrice = 0;
-            ?>
             <?php foreach ($viewData['products'] as $product): ?>
                 <tr class="productitm">
                     <form action="/delete-product" method="POST">
@@ -38,8 +49,6 @@
                     </form>
                 </tr>
             <?php endforeach; ?>
-
-
             <tr class="totalprice">
                 <td class="light">Total:</td>
                 <td colspan="2">&nbsp;</td>
@@ -53,6 +62,7 @@
             </tbody>
         </table>
     </div>
+    <?php endif; ?>
 </div>
 </body>
 

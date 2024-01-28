@@ -14,7 +14,7 @@ class AuthenticationService
 
     public function getCurrentUser(): User|null
     {
-        if (!$this->check())
+        if (!isset($_SESSION['user_id']))
         {
             return null;
         }

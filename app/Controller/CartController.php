@@ -5,43 +5,73 @@ namespace Controller;
 use Model\Cart;
 use Model\CartProduct;
 use Request\DeleteProductRequest;
+use Service\AuthenticationService;
 use Service\CartViewService;
 
 
 class CartController
 {
+    private AuthenticationService $authenticationService;
+
+    public function __construct()
+    {
+        $this->authenticationService = new AuthenticationService();
+    }
+
     public function getCartForm(): void
     {
-        session_start();
-        if (!isset($_SESSION['user_id'])) {
-            header("Location: /login");
-        } else {
-            $userId = $_SESSION['user_id'];
-            $cart = Cart::getCart($userId);
-            $productsInCart = CartProduct::getProductsInCart($cart->getId());
-            $viewData = CartViewService::viewProductsInCart($productsInCart);
+        $result = $this->authenticationService->check();
 
-            require_once './../View/cart.php';
+        if (!$result) {
+            header("Location: /login");
         }
+
+        $userId = $this->authenticationService->getCurrentUser()->getId();
+        $cart = Cart::getCart($userId);
+        $productsInCart = CartProduct::getProductsInCart($cart->getId());
+        $errors = $this->check($userId, $cart, $productsInCart);
+
+        if (!empty($errors))
+        {
+            require_once './../View/cart.php';
+            exit;
+        }
+
+        $viewData = CartViewService::viewProductsInCart($productsInCart);
+        require_once './../View/cart.php';
     }
 
     public function deleteProduct(DeleteProductRequest $request): void
     {
-        session_start();
-        if (!isset($_SESSION['user_id'])) {
+        $result = $this->authenticationService->check();
+
+        if (!$result) {
             header("Location: /login");
-        } else {
-            $errors = $request->validate();
-
-            if (empty($errors))
-            {
-                $userId = $_SESSION['user_id'];
-                $cart = Cart::getCart($userId);
-                $productId = $request->getProductId();
-                CartProduct::deleteProduct($cart->getId(), $productId);
-
-                header("Location: /cart");
-            }
         }
+
+        $errors = $request->validate();
+
+        if (empty($errors)) {
+            $userId = $this->authenticationService->getCurrentUser()->getId();
+            $cart = Cart::getCart($userId);
+            $productId = $request->getProductId();
+            CartProduct::deleteProduct($cart->getId(), $productId);
+
+            header("Location: /cart");
+        }
+    }
+
+    public function check($userId, $cart, $productsInCart): array
+    {
+        $errors = [];
+        if (empty($userId)) {
+           $errors['userId'] = "User does not exist";
+        } elseif (empty($cart)) {
+            $errors['cart'] = "Cart does not exist";
+        } elseif (empty($productsInCart)) {
+            $errors['productsInCart'] = "Cart is empty";
+        }
+
+        return $errors;
     }
 }

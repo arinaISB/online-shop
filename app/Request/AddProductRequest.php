@@ -29,5 +29,4 @@ class AddProductRequest extends Request
     {
         return $this->body['quantity'];
     }
-
 }

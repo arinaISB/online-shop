@@ -2,19 +2,28 @@
 
 namespace Controller;
 use Model\Product;
+use Service\AuthenticationService;
 
 class MainController
 {
+    private AuthenticationService $authenticationService;
+
+    public function __construct()
+    {
+        $this->authenticationService = new AuthenticationService();
+    }
+
     public function getProducts(): void
     {
-        session_start();
-        if (!isset($_SESSION['user_id']))
+        $result = $this->authenticationService->check();
+
+        if (!$result)
         {
             header("Location: /login");
-        } else {
-            $products = Product::getAll();
-
-            require_once './../View/main.php';
         }
+
+        $products = Product::getAll();
+
+        require_once './../View/main.php';
     }
 }
