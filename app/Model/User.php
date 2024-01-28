@@ -50,7 +50,7 @@ class User extends Model
         return new User($result['id'], $result['name'], $result['email'], $result['password']);
     }
 
-    public static function getById(int $id)
+    public static function getById(int $id): User|null
     {
         $statement = static::getPdo()->prepare("SELECT * FROM users WHERE id = :id");
         $statement->execute(['id' => $id]);

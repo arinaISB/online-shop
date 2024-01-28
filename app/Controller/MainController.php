@@ -24,6 +24,12 @@ class MainController
 
         $products = Product::getAll();
 
+        if (empty($products))
+        {
+            echo "No products";
+            exit;
+        }
+
         require_once './../View/main.php';
     }
 }

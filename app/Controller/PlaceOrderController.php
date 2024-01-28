@@ -6,10 +6,10 @@ use Model\Cart;
 use Model\CartProduct;
 use Model\OrderedCart;
 use Model\PlacedOrder;
-use Model\Product;
 use Request\PlaceOrderFormRequest;
+use Resource\CartProductResource;
+use Resource\CartResource;
 use Service\AuthenticationService;
-use Service\CartViewService;
 
 class PlaceOrderController
 {
@@ -29,16 +29,7 @@ class PlaceOrderController
             header("Location: /login");
         }
 
-        $userId = $_SESSION['user_id'];
-        $cart = Cart::getCart($userId);
-        $productsInCart = CartProduct::getProductsInCart($cart->getId());
-
-        if (empty($productsInCart))
-        {
-            $errors = "Cart is empty";
-        } else {
-            $viewData = CartViewService::viewProductsInCart($productsInCart);
-        }
+        list($cart, $viewData) = $this->extracted();
 
         require_once './../View/place_order.php';
 
@@ -55,22 +46,21 @@ class PlaceOrderController
 
         $errors = $request->validate();
 
-        $userId = $_SESSION['user_id'];
-        $cart = Cart::getCart($userId);
-        $productsInCart = CartProduct::getProductsInCart($cart->getId());
-        $totalPrice = CartViewService::calculateTotalPrice($productsInCart);
-        $placedOrderId = $this->createPlacedOrder($request, $totalPrice);
+        if (empty($errors))
+        {
+            list($cart, $viewData) = $this->extracted();
+            $placedOrderId = $this->createPlacedOrder($request, $viewData['totalPrice']);
 
-        if (empty($errors)) {
-            foreach ($productsInCart as $productInCart) {
-                $productId = $productInCart->getProductId();
-                $productInfo = Product::getProductInfo($productId);
-                $productLineTotal = $productInCart->getQuantity() * $productInfo->getPrice();
-                OrderedCart::addOrderedItems($placedOrderId, $productId, $productInCart->getQuantity(), $productLineTotal);
-                CartProduct::deleteProduct($cart->getId(), $productId);
+            foreach ($viewData['products'] as $productInCart)
+            {
+                $product = CartProductResource::format($productInCart);
+                OrderedCart::addOrderedItems($placedOrderId, $product['id'], $productInCart->getQuantity(), $product['lineTotal']);
+                CartProduct::deleteProduct($cart->getId(), $product['id']);
             }
+
             header("Location: /main");
         }
+
         require_once './../View/place_order.php';
     }
 
@@ -86,5 +76,39 @@ class PlaceOrderController
         $postal = $request->getPostal();
 
         return PlacedOrder::addAndGetPlacedOrder($totalPrice, $email, $phone, $userName, $address, $city, $country, $postal);
+    }
+
+    public function check($userId, $cart, $productsInCart): array
+    {
+        $errors = [];
+        if (empty($userId)) {
+            $errors['userId'] = "User does not exist";
+        } elseif (empty($cart)) {
+            $errors['cart'] = "Cart does not exist";
+        } elseif (empty($productsInCart)) {
+            $errors['productsInCart'] = "Cart is empty";
+        }
+
+        return $errors;
+    }
+
+    /**
+     * @return array|void
+     */
+    public function extracted()
+    {
+        $userId = $this->authenticationService->getCurrentUser()->getId();
+        $cart = Cart::getCart($userId);
+        $productsInCart = CartProduct::getAllByCartId($cart->getId());
+
+        $errors = $this->check($userId, $cart, $productsInCart);
+
+        if (!empty($errors)) {
+            require_once './../View/place_order.php';
+            exit;
+        }
+
+        $viewData = CartResource::format($cart);
+        return array($cart, $viewData);
     }
 }

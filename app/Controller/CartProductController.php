@@ -19,7 +19,6 @@ class CartProductController
     public function getAddProductForm(): void
     {
         $result = $this->authenticationService->check();
-
         if (!$result)
         {
             header("Location: /login");
@@ -30,6 +29,12 @@ class CartProductController
 
     public function addProduct(AddProductRequest $request): void
     {
+        $result = $this->authenticationService->check();
+        if (!$result)
+        {
+            header("Location: /login");
+        }
+
         $errors = $request->validate();
 
         if (empty($errors))

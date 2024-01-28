@@ -58,6 +58,13 @@ class UserController
             $email = $request->getEmail();
             $user = User::getOneByEmail($email);
 
+            if (!$user)
+            {
+                $errors['password'] = 'Invalid password or email';
+                require_once './../View/login.php';
+                exit;
+            }
+
             $result = $this->authenticationService->login($password);
 
             if ($result)
@@ -65,6 +72,8 @@ class UserController
                 header("Location: /main");
             } else {
                 $errors['password'] = 'Invalid password or email';
+                require_once './../View/login.php';
+                exit;
             }
         }
 

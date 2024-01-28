@@ -5,8 +5,8 @@ namespace Controller;
 use Model\Cart;
 use Model\CartProduct;
 use Request\DeleteProductRequest;
+use Resource\CartResource;
 use Service\AuthenticationService;
-use Service\CartViewService;
 
 
 class CartController
@@ -22,13 +22,15 @@ class CartController
     {
         $result = $this->authenticationService->check();
 
-        if (!$result) {
+        if (!$result)
+        {
             header("Location: /login");
         }
 
         $userId = $this->authenticationService->getCurrentUser()->getId();
         $cart = Cart::getCart($userId);
-        $productsInCart = CartProduct::getProductsInCart($cart->getId());
+        $productsInCart = CartProduct::getAllByCartId($cart->getId());
+
         $errors = $this->check($userId, $cart, $productsInCart);
 
         if (!empty($errors))
@@ -37,7 +39,7 @@ class CartController
             exit;
         }
 
-        $viewData = CartViewService::viewProductsInCart($productsInCart);
+        $viewData = CartResource::format($cart);
         require_once './../View/cart.php';
     }
 

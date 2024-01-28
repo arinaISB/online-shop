@@ -56,7 +56,7 @@ class Product extends Model
         return $result;
     }
 
-    public static function getProductInfo(int $id): Product|null
+    public static function getOneById(int $id): Product|null
     {
         $statement = self::getPdo()->prepare("SELECT * FROM products WHERE id = :id");
         $statement->execute(['id' => $id]);

@@ -14,17 +14,18 @@ class AuthenticationService
 
     public function getCurrentUser(): User|null
     {
-        if (!isset($_SESSION['user_id']))
-        {
-            return null;
-        }
+//        if (!$this->check())
+//        {
+//            return null;
+//        }
 
         return User::getById($_SESSION['user_id']);
     }
 
     public function login(string $password): bool
     {
-        $user =$this->getCurrentUser();
+        session_start();
+        $user = $this->getCurrentUser();
 
         if (!$user)
         {
