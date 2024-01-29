@@ -37,7 +37,7 @@ class AuthenticationService
         return true;
     }
 
-    public function logout()
+    public function logout(): void
     {
         if (session_status() === PHP_SESSION_ACTIVE) {
             session_destroy();
