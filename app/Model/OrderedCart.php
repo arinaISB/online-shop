@@ -4,11 +4,11 @@ namespace Model;
 
 class OrderedCart extends Model
 {
-    private ?int $id;
-    private ?int $placedOrderId;
-    private ?int $productId;
-    private ?int $quantity;
-    private ?int $productLineTotal;
+    protected ?int $id;
+    protected ?int $placedOrderId;
+    protected ?int $productId;
+    protected ?int $quantity;
+    protected ?int $productLineTotal;
 
     public function __construct(?int $id = null, ?int $placedOrderId = null, ?int $productId = null, ?int $quantity = null, ?int $productLineTotal = null)
     {
@@ -42,17 +42,6 @@ class OrderedCart extends Model
     public function getProductLineTotal(): int
     {
         return $this->productLineTotal;
-    }
-
-    public static function hydrate(array $data): static
-    {
-        return new static(
-            $data['id'],
-            $data['placed_order_id'],
-            $data['placed_order_id'],
-            $data['quantity'],
-            $data['line_total'],
-        );
     }
 
     public static function addOrderedItems(int $placedOrderId, int $productId, int $quantity, int $productLineTotal): OrderedCart|null

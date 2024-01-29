@@ -17,10 +17,10 @@ class AuthenticationService
 
     public function getCurrentUser(): User|null
     {
-//        if (isset($this->user))
-//        {
-//            return $this->user;
-//        }
+        if (isset($this->user))
+        {
+            return $this->user;
+        }
 
         if (isset($_SESSION['user_id']))
         {
@@ -31,11 +31,11 @@ class AuthenticationService
         return null;
     }
 
-    public function login(LoginRequest $request): bool
+    public function login(string $password, string $email): bool
     {
-        $user = User::getOneByEmail($request->getEmail());
+        $user = User::getOneByEmail($email);
 
-        if (!$user || !password_verify($request->getPassword(), $user->getPassword()))
+        if (!$user || !password_verify($password, $user->getPassword()))
         {
             return false;
         }

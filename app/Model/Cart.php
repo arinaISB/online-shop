@@ -4,8 +4,8 @@ namespace Model;
 
 class Cart extends Model
 {
-    private int $id;
-    private int $userId;
+    protected ?int $id;
+    protected ?int $userId;
 
     public function __construct(?int $id = null, ?int $userId = null)
     {
@@ -21,14 +21,6 @@ class Cart extends Model
     public function getUserId(): int
     {
         return $this->userId;
-    }
-
-    public static function hydrate(array $data): static
-    {
-        return new static(
-            $data['id'],
-            $data['user_id'],
-        );
     }
 
     public static function create(int $userId): bool

@@ -46,7 +46,10 @@ class UserController
         $errors = $request->validate();
 
         if(empty($errors)) {
-            $result = $this->authenticationService->login($request);
+            $password = $request->getPassword();
+            $email = $request->getEmail();
+
+            $result = $this->authenticationService->login($password, $email);
 
             if ($result) {
                 header("Location: /main");

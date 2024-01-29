@@ -4,10 +4,10 @@ namespace Model;
 
 class Product extends Model
 {
-    private ?int $id;
-    private ?string $name;
-    private ?int $price;
-    private ?string $link;
+    protected ?int $id;
+    protected ?string $name;
+    protected ?int $price;
+    protected ?string $link;
 
     public function __construct(?int $id = null, ?string $name = null, ?int $price = null, ?string $link = null)
     {
@@ -36,16 +36,6 @@ class Product extends Model
     public function getLink(): string
     {
         return $this->link;
-    }
-
-    public static function hydrate(array $data): static
-    {
-        return new static(
-            $data['id'],
-            $data['name'],
-            $data['price'],
-            $data['link'],
-        );
     }
 
     public static function getAll(): array

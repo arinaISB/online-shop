@@ -4,15 +4,15 @@ namespace Model;
 
 class PlacedOrder extends Model
 {
-    private ?int $id;
-    private ?int $total;
-    private ?string $email;
-    private ?string $phone;
-    private ?string $userName;
-    private ?string $address;
-    private ?string $city;
-    private ?string $country;
-    private ?string $postal;
+    protected ?int $id;
+    protected ?int $total;
+    protected ?string $email;
+    protected ?string $phone;
+    protected ?string $userName;
+    protected ?string $address;
+    protected ?string $city;
+    protected ?string $country;
+    protected ?string $postal;
 
     public function __construct(?int $id = null, ?int $total = null, ?string $email = null, ?string $phone = null, ?string $userName = null, ?string $address = null, ?string $city = null, ?string $country = null, ?string $postal = null)
     {
@@ -70,21 +70,6 @@ class PlacedOrder extends Model
     public function getPostal(): string
     {
         return $this->postal;
-    }
-
-    public static function hydrate(array $data): static
-    {
-        return new static(
-            $data['id'],
-            $data['total'],
-            $data['email'],
-            $data['phone'],
-            $data['userName'],
-            $data['address'],
-            $data['city'],
-            $data['country'],
-            $data['postal'],
-        );
     }
 
     public static function addAndGetId(int $total, string $email, string $phone, string $userName, string $address, string $city, string $country, string $postal): false|string

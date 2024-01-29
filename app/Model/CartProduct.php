@@ -4,10 +4,10 @@ namespace Model;
 
 class CartProduct extends Model
 {
-    private ?int $id;
-    private ?int $cartId;
-    private ?int $productId;
-    private ?int $quantity;
+    protected ?int $id;
+    protected ?int $cartId;
+    protected ?int $productId;
+    protected ?int $quantity;
 
     public function __construct(?int $id = null, ?int $cartId  = null, ?int $productId = null, ?int $quantity = null)
     {
@@ -35,16 +35,6 @@ class CartProduct extends Model
     public function getQuantity(): int
     {
         return $this->quantity;
-    }
-
-    public static function hydrate(array $data): static
-    {
-        return new static(
-            $data['id'],
-            $data['cart_id'],
-            $data['product_id'],
-            $data['quantity'],
-        );
     }
 
     public static function add(int $cartId, int $productId, int $quantity): bool

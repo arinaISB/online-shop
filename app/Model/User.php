@@ -4,10 +4,10 @@ namespace Model;
 
 class User extends Model
 {
-    private int $id;
-    private string $name;
-    private string $email;
-    private string $password;
+    protected ?int $id;
+    protected ?string $name;
+    protected ?string $email;
+    protected ?string $password;
 
     public function __construct(?int $id = null, ?string $name = null, ?string $email = null, ?string $password = null)
     {
@@ -37,16 +37,6 @@ class User extends Model
         return $this->password;
     }
 
-    public static function hydrate(array $data): static
-    {
-        return new static(
-            $data['id'],
-            $data['name'],
-            $data['email'],
-            $data['password'],
-        );
-    }
-
     public static function getOneByEmail(string $email): User|null
     {
         $statement = static::getPdo()->prepare("SELECT * FROM users WHERE email = :email");
@@ -56,6 +46,7 @@ class User extends Model
         if (empty($result)) {
             return null;
         }
+
         return static::hydrate($result);
     }
 
