@@ -75,7 +75,7 @@ class PlaceOrderController
         $country = $request->getCountry();
         $postal = $request->getPostal();
 
-        return PlacedOrder::addAndGetPlacedOrder($totalPrice, $email, $phone, $userName, $address, $city, $country, $postal);
+        return PlacedOrder::addAndGetId($totalPrice, $email, $phone, $userName, $address, $city, $country, $postal);
     }
 
     public function check($userId, $cart, $productsInCart): array
@@ -98,7 +98,7 @@ class PlaceOrderController
     public function extracted()
     {
         $userId = $this->authenticationService->getCurrentUser()->getId();
-        $cart = Cart::getCart($userId);
+        $cart = Cart::getOneByUserId($userId);
         $productsInCart = CartProduct::getAllByCartId($cart->getId());
 
         $errors = $this->check($userId, $cart, $productsInCart);

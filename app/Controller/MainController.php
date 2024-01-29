@@ -15,9 +15,7 @@ class MainController
 
     public function getProducts(): void
     {
-        $result = $this->authenticationService->check();
-
-        if (!$result)
+        if (!$this->authenticationService->check())
         {
             header("Location: /login");
         }

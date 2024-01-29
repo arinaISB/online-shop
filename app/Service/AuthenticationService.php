@@ -7,7 +7,7 @@ use Request\LoginRequest;
 
 class AuthenticationService
 {
-    private User $user;
+    private ?User $user = null;
 
     public function check(): bool
     {
@@ -40,6 +40,7 @@ class AuthenticationService
             return false;
         }
 
+        session_start();
         $_SESSION['user_id'] = $user->getId();
 
         return true;
@@ -47,8 +48,8 @@ class AuthenticationService
 
     public function logout(): void
     {
-        if (session_status() === PHP_SESSION_ACTIVE) {
-            session_destroy();
-        }
+        session_start();
+        unset($_SESSION['user_id']);
+        session_destroy();
     }
 }

@@ -44,22 +44,22 @@ class CartProductController
             $quantity = $request->getQuantity();
 
             $userId = $this->authenticationService->getCurrentUser()->getId();
-            $cart = Cart::getCart($userId);
+            $cart = Cart::getOneByUserId($userId);
 
             if (!empty($cart)) {
-                $cartProduct = CartProduct::getCartProduct($cart->getId(), $productId);
+                $cartProduct = CartProduct::get($cart->getId(), $productId);
 
                 if (empty($cartProduct)) {
-                    CartProduct::addCartProducts($cart->getId(), $productId, $quantity);
+                    CartProduct::add($cart->getId(), $productId, $quantity);
                 } else {
                     $currentQuantity = $cartProduct->getQuantity();
                     $newQuantity = $currentQuantity + $quantity;
                     CartProduct::updateProductQuantity($cart->getId(), $productId, $newQuantity);
                 }
             } else {
-                Cart::createCart($userId);
-                $cart = Cart::getCart($userId);
-                CartProduct::addCartProducts($cart->getId(), $productId, $quantity);
+                Cart::create($userId);
+                $cart = Cart::getOneByUserId($userId);
+                CartProduct::add($cart->getId(), $productId, $quantity);
             }
 
             header("Location: /main");

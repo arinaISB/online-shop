@@ -47,13 +47,13 @@ class CartProduct extends Model
         );
     }
 
-    public static function addCartProducts(int $cartId, int $productId, int $quantity): bool
+    public static function add(int $cartId, int $productId, int $quantity): bool
     {
         $statement = static::getPdo()->prepare("INSERT INTO cart_products (cart_id, product_id, quantity) VALUES (:cart_id, :product_id, :quantity)");
         return $statement->execute(['cart_id' => $cartId, 'product_id' => $productId, 'quantity' => $quantity]);
     }
 
-    public static function getCartProduct(int $cartId, int $productId): CartProduct|false
+    public static function get(int $cartId, int $productId): CartProduct|false
     {
         $statement = self::getPdo()->prepare("SELECT * FROM cart_products WHERE cart_id = :cart_id AND product_id = :product_id");
         $statement->execute(['cart_id' => $cartId, 'product_id' => $productId]);
@@ -64,7 +64,6 @@ class CartProduct extends Model
             return false;
         }
 
-//        return new CartProduct($data['id'], $data['cart_id'], $data['product_id'], $data['quantity']);
         return static::hydrate($result);
     }
 

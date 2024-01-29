@@ -87,7 +87,7 @@ class PlacedOrder extends Model
         );
     }
 
-    public static function addAndGetPlacedOrder(int $total, string $email, string $phone, string $userName, string $address, string $city, string $country, string $postal): false|string
+    public static function addAndGetId(int $total, string $email, string $phone, string $userName, string $address, string $city, string $country, string $postal): false|string
     {
         $statement = static::getPdo()->prepare("INSERT INTO placed_orders (total, email, phone, name, address, city, country, postal) VALUES (:total, :email, :phone, :userName, :address, :city, :country, :postal)");
         $statement->execute(['total' => $total, 'email' => $email, 'phone' => $phone, 'userName' => $userName, 'address' => $address, 'city' => $city, 'country' => $country, 'postal' => $postal]);

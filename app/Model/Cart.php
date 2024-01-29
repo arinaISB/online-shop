@@ -31,13 +31,13 @@ class Cart extends Model
         );
     }
 
-    public static function createCart(int $userId): bool
+    public static function create(int $userId): bool
     {
         $statement = static::getPdo()->prepare("INSERT INTO carts (user_id) VALUES (:user_id)");
         return $statement->execute(['user_id' => $userId]);
     }
 
-    public static function getCart(int $userId): Cart|null
+    public static function getOneByUserId(int $userId): Cart|null
     {
         $statement = static::getPdo()->prepare("SELECT * FROM carts WHERE user_id = :user_id");
         $statement->execute(['user_id' => $userId]);

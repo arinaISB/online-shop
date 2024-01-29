@@ -28,7 +28,7 @@ class CartController
         }
 
         $userId = $this->authenticationService->getCurrentUser()->getId();
-        $cart = Cart::getCart($userId);
+        $cart = Cart::getOneByUserId($userId);
         $productsInCart = CartProduct::getAllByCartId($cart->getId());
 
         $errors = $this->check($userId, $cart, $productsInCart);
@@ -55,7 +55,7 @@ class CartController
 
         if (empty($errors)) {
             $userId = $this->authenticationService->getCurrentUser()->getId();
-            $cart = Cart::getCart($userId);
+            $cart = Cart::getOneByUserId($userId);
             $productId = $request->getProductId();
             CartProduct::deleteProduct($cart->getId(), $productId);
 

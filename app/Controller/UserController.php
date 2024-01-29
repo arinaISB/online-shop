@@ -30,14 +30,7 @@ class UserController
             $password = $request->getPassword();
             $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
-            User::addUser($email, $name, $hashedPassword);
-
-            $result = $this->authenticationService->login($password);
-            if (!$result)
-            {
-                $errors['email'] = 'Invalid login or password';
-            }
-
+            User::add($email, $name, $hashedPassword);
             header("Location: /login");
         }
         require_once './../View/registration.php';
@@ -57,13 +50,11 @@ class UserController
 
             if ($result) {
                 header("Location: /main");
-                exit;
             } else {
                 $errors['email'] = 'Invalid password or email';
+                require_once './../View/login.php';
             }
         }
-
-        require_once './../View/login.php';
     }
 
 
