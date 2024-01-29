@@ -4,17 +4,17 @@ namespace Model;
 
 class PlacedOrder extends Model
 {
-    private int $id;
-    private int $total;
-    private string $email;
-    private string $phone;
-    private string $userName;
-    private string $address;
-    private string $city;
-    private string $country;
-    private string $postal;
+    private ?int $id;
+    private ?int $total;
+    private ?string $email;
+    private ?string $phone;
+    private ?string $userName;
+    private ?string $address;
+    private ?string $city;
+    private ?string $country;
+    private ?string $postal;
 
-    public function __construct(int $id, int $total, string $email, string $phone, string $userName, string $address, string $city, string $country, string $postal)
+    public function __construct(?int $id = null, ?int $total = null, ?string $email = null, ?string $phone = null, ?string $userName = null, ?string $address = null, ?string $city = null, ?string $country = null, ?string $postal = null)
     {
         $this->id = $id;
         $this->total = $total;
@@ -72,9 +72,24 @@ class PlacedOrder extends Model
         return $this->postal;
     }
 
+    public static function hydrate(array $data): static
+    {
+        return new static(
+            $data['id'] ?? null,
+            $data['total'] ?? null,
+            $data['email'] ?? null,
+            $data['phone'] ?? null,
+            $data['userName'] ?? null,
+            $data['address'] ?? null,
+            $data['city'] ?? null,
+            $data['country'] ?? null,
+            $data['postal'] ?? null,
+        );
+    }
+
     public static function addAndGetPlacedOrder(int $total, string $email, string $phone, string $userName, string $address, string $city, string $country, string $postal): false|string
     {
-        $statement = self::getPdo()->prepare("INSERT INTO placed_orders (total, email, phone, name, address, city, country, postal) VALUES (:total, :email, :phone, :userName, :address, :city, :country, :postal)");
+        $statement = static::getPdo()->prepare("INSERT INTO placed_orders (total, email, phone, name, address, city, country, postal) VALUES (:total, :email, :phone, :userName, :address, :city, :country, :postal)");
         $statement->execute(['total' => $total, 'email' => $email, 'phone' => $phone, 'userName' => $userName, 'address' => $address, 'city' => $city, 'country' => $country, 'postal' => $postal]);
 
         return static::getPdo()->lastInsertId();

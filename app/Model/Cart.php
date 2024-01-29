@@ -4,10 +4,10 @@ namespace Model;
 
 class Cart extends Model
 {
-    private int $id;
-    private int $userId;
+    private ?int $id;
+    private ?int $userId;
 
-    public function __construct(int $id, int $userId)
+    public function __construct(?int $id = null, ?int $userId = null)
     {
         $this->id = $id;
         $this->userId = $userId;
@@ -23,6 +23,14 @@ class Cart extends Model
         return $this->userId;
     }
 
+    public static function hydrate(array $data): static
+    {
+        return new static(
+            $data['id'] ?? null,
+            $data['userId'] ?? null,
+        );
+    }
+
     public static function createCart(int $userId): bool
     {
         $statement = static::getPdo()->prepare("INSERT INTO carts (user_id) VALUES (:user_id)");
@@ -33,13 +41,14 @@ class Cart extends Model
     {
         $statement = static::getPdo()->prepare("SELECT * FROM carts WHERE user_id = :user_id");
         $statement->execute(['user_id' => $userId]);
-        $data = $statement->fetch();
+        $result = $statement->fetch();
 
-        if (!$data)
+        if (!$result)
         {
             return null;
         }
 
-        return new Cart($data['id'], $data['user_id']);
+//        return new Cart($data['id'], $data['user_id']);
+        return static::hydrate($result);
     }
 }

@@ -25,4 +25,22 @@ class Model
         }
         return static::$pdo;
     }
+
+    public static function hydrate(array $data): static
+    {
+        $obj = new static();
+
+        foreach ($data as $key => $value)
+        {
+            $camelCaseKey = self::snakeToCamel($key);
+            $obj->$camelCaseKey = $value;
+        }
+
+        return $obj;
+    }
+
+    protected static function snakeToCamel(string $input): string
+    {
+        return lcfirst(str_replace(' ', '', ucwords(str_replace('_', ' ', $input))));
+    }
 }

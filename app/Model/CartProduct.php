@@ -4,12 +4,12 @@ namespace Model;
 
 class CartProduct extends Model
 {
-    private int $id;
-    private int $cartId;
-    private int $productId;
-    private int $quantity;
+    private ?int $id;
+    private ?int $cartId;
+    private ?int $productId;
+    private ?int $quantity;
 
-    public function __construct(int $id, int $cartId, int $productId, int $quantity)
+    public function __construct(?int $id = null, ?int $cartId  = null, ?int $productId = null, ?int $quantity = null)
     {
         $this->id = $id;
         $this->cartId = $cartId;
@@ -37,6 +37,16 @@ class CartProduct extends Model
         return $this->quantity;
     }
 
+    public static function hydrate(array $data): static
+    {
+        return new static(
+            $data['id'] ?? null,
+            $data['cartId'] ?? null,
+            $data['productId'] ?? null,
+            $data['quantity'] ?? null,
+        );
+    }
+
     public static function addCartProducts(int $cartId, int $productId, int $quantity): bool
     {
         $statement = static::getPdo()->prepare("INSERT INTO cart_products (cart_id, product_id, quantity) VALUES (:cart_id, :product_id, :quantity)");
@@ -47,25 +57,26 @@ class CartProduct extends Model
     {
         $statement = self::getPdo()->prepare("SELECT * FROM cart_products WHERE cart_id = :cart_id AND product_id = :product_id");
         $statement->execute(['cart_id' => $cartId, 'product_id' => $productId]);
-        $data = $statement->fetch();
+        $result = $statement->fetch();
 
-        if (!$data)
+        if (!$result)
         {
             return false;
         }
 
-        return new CartProduct($data['id'], $data['cart_id'], $data['product_id'], $data['quantity']);
+//        return new CartProduct($data['id'], $data['cart_id'], $data['product_id'], $data['quantity']);
+        return static::hydrate($result);
     }
 
     public static function updateProductQuantity($cartId, $productId, $newQuantity): bool
     {
-        $statement = self::getPdo()->prepare("UPDATE cart_products SET quantity = :quantity WHERE cart_id = :cart_id AND  product_id = :product_id");
+        $statement = static::getPdo()->prepare("UPDATE cart_products SET quantity = :quantity WHERE cart_id = :cart_id AND  product_id = :product_id");
         return $statement->execute(['cart_id' => $cartId, 'product_id' => $productId, 'quantity' => $newQuantity]);
     }
 
     public static function getAllByCartId(int $cartId): array|null
     {
-        $statement = self::getPdo()->prepare("SELECT * FROM cart_products WHERE cart_id = :cart_id");
+        $statement = static::getPdo()->prepare("SELECT * FROM cart_products WHERE cart_id = :cart_id");
         $statement->execute(['cart_id' => $cartId]);
         $products = $statement->fetchAll();
 
@@ -84,7 +95,7 @@ class CartProduct extends Model
 
     public static function deleteProduct(int $cartId, int $productId): bool
     {
-        $statement = self::getPdo()->prepare("DELETE FROM cart_products WHERE cart_id = :cart_id AND product_id = :product_id");
+        $statement = static::getPdo()->prepare("DELETE FROM cart_products WHERE cart_id = :cart_id AND product_id = :product_id");
         return $statement->execute(['cart_id' => $cartId, 'product_id' => $productId]);
     }
 }

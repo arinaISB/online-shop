@@ -4,13 +4,12 @@ namespace Model;
 
 class User extends Model
 {
-    private int $id;
-    private string $name;
-    private string $email;
-    private string $password;
+    private ?int $id;
+    private ?string $name;
+    private ?string $email;
+    private ?string $password;
 
-
-    public function __construct(int $id, string $name, string $email, string $password)
+    public function __construct(?int $id = null, ?string $name = null, ?string $email = null, ?string $password = null)
     {
         $this->id = $id;
         $this->name = $name;
@@ -38,6 +37,16 @@ class User extends Model
         return $this->password;
     }
 
+    public static function hydrate(array $data): static
+    {
+        return new static(
+            $data['id'] ?? null,
+            $data['name'] ?? null,
+            $data['email'] ?? null,
+            $data['password'] ?? null,
+        );
+    }
+
     public static function getOneByEmail(string $email): User|null
     {
         $statement = static::getPdo()->prepare("SELECT * FROM users WHERE email = :email");
@@ -47,7 +56,8 @@ class User extends Model
         if (empty($result)) {
             return null;
         }
-        return new User($result['id'], $result['name'], $result['email'], $result['password']);
+//        return new User($result['id'], $result['name'], $result['email'], $result['password']);
+        return static::hydrate($result);
     }
 
     public static function getById(int $id): User|null
@@ -61,7 +71,8 @@ class User extends Model
             return null;
         }
 
-        return new User($result['id'], $result['name'], $result['email'], $result['password']);
+//        return new User($result['id'], $result['name'], $result['email'], $result['password']);
+        return static::hydrate($result);
     }
 
     public static function addUser(string $email, string $name, string $password): void

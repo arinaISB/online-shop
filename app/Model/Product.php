@@ -4,12 +4,12 @@ namespace Model;
 
 class Product extends Model
 {
-    private int $id;
-    private string $name;
-    private int $price;
-    private string $link;
+    private ?int $id;
+    private ?string $name;
+    private ?int $price;
+    private ?string $link;
 
-    public function __construct(int $id, string $name, int $price, string $link)
+    public function __construct(?int $id = null, ?string $name = null, ?int $price = null, ?string $link = null)
     {
         $this->id = $id;
         $this->name = $name;
@@ -38,19 +38,26 @@ class Product extends Model
         return $this->link;
     }
 
-    public static function getAll(): array|null
+    public static function hydrate(array $data): static
     {
-        $statement = self::getPdo()->query("SELECT * FROM products");
-        $products = $statement->fetchAll();
+        return new static(
+            $data['id'] ?? null,
+            $data['name'] ?? null,
+            $data['price'] ?? null,
+            $data['link'] ?? null,
+        );
+    }
 
-        if (empty($products))
-        {
-            return null;
-        }
+    public static function getAll(): array
+    {
+        $statement = static::getPdo()->query("SELECT * FROM products");
+        $products = $statement->fetchAll();
 
         $result = [];
         foreach ($products as $product) {
-            $result[] = new Product($product['id'], $product['name'], $product['price'], $product['link']);
+//            $result[] = new Product($product['id'], $product['name'], $product['price'], $product['link']);
+            $result[] = static::hydrate($product);
+
         }
 
         return $result;
@@ -58,7 +65,7 @@ class Product extends Model
 
     public static function getOneById(int $id): Product|null
     {
-        $statement = self::getPdo()->prepare("SELECT * FROM products WHERE id = :id");
+        $statement = static::getPdo()->prepare("SELECT * FROM products WHERE id = :id");
         $statement->execute(['id' => $id]);
         $productInfo = $statement->fetch();
 
@@ -67,6 +74,7 @@ class Product extends Model
             return null;
         }
 
-        return new Product($productInfo['id'], $productInfo['name'], $productInfo['price'], $productInfo['link']);
+//        return new Product($productInfo['id'], $productInfo['name'], $productInfo['price'], $productInfo['link']);
+        return static::hydrate($productInfo);
     }
 }
