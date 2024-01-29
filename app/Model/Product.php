@@ -55,9 +55,7 @@ class Product extends Model
 
         $result = [];
         foreach ($products as $product) {
-//            $result[] = new Product($product['id'], $product['name'], $product['price'], $product['link']);
             $result[] = static::hydrate($product);
-
         }
 
         return $result;
@@ -74,7 +72,6 @@ class Product extends Model
             return null;
         }
 
-//        return new Product($productInfo['id'], $productInfo['name'], $productInfo['price'], $productInfo['link']);
         return static::hydrate($productInfo);
     }
 }

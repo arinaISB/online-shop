@@ -48,7 +48,6 @@ class Cart extends Model
             return null;
         }
 
-//        return new Cart($data['id'], $data['user_id']);
         return static::hydrate($result);
     }
 }

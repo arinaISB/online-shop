@@ -56,7 +56,6 @@ class User extends Model
         if (empty($result)) {
             return null;
         }
-//        return new User($result['id'], $result['name'], $result['email'], $result['password']);
         return static::hydrate($result);
     }
 
@@ -71,7 +70,6 @@ class User extends Model
             return null;
         }
 
-//        return new User($result['id'], $result['name'], $result['email'], $result['password']);
         return static::hydrate($result);
     }
 

@@ -66,7 +66,6 @@ class OrderedCart extends Model
             return null;
         }
 
-//        return new OrderedCart($data['id'], $data['placed_order_id'], $data['product_id'], $data['quantity'], $data['line_total']);
         return static::hydrate($result);
     }
 }

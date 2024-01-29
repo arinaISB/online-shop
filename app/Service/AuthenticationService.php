@@ -14,11 +14,6 @@ class AuthenticationService
 
     public function getCurrentUser(): User|null
     {
-//        if (!$this->check())
-//        {
-//            return null;
-//        }
-
         return User::getById($_SESSION['user_id']);
     }
 
@@ -37,12 +32,15 @@ class AuthenticationService
             return false;
         }
 
-        $id = $user->getId();
-        $name = $user->getName();
-        $email = $user->getEmail();
-        $password = $user->getPassword();
-//        $_SESSION['user_id'] = $user->getId();
+        $_SESSION['user_id'] = $user->getId();
 
         return true;
+    }
+
+    public function logout()
+    {
+        if (session_status() === PHP_SESSION_ACTIVE) {
+            session_destroy();
+        }
     }
 }

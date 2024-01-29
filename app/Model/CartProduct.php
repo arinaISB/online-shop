@@ -80,14 +80,9 @@ class CartProduct extends Model
         $statement->execute(['cart_id' => $cartId]);
         $products = $statement->fetchAll();
 
-        if (empty($products))
-        {
-            return null;
-        }
-
         $result = [];
         foreach ($products as $product) {
-            $result[] = new CartProduct($product['id'], $product['cart_id'], $product['product_id'], $product['quantity']);
+            $result[] = static::hydrate($product);
         }
 
         return $result;
