@@ -3,9 +3,12 @@
 namespace Service;
 
 use Model\User;
+use Request\LoginRequest;
 
 class AuthenticationService
 {
+    private User $user;
+
     public function check(): bool
     {
         session_start();
@@ -14,20 +17,25 @@ class AuthenticationService
 
     public function getCurrentUser(): User|null
     {
-        return User::getById($_SESSION['user_id']);
-    }
-
-    public function login(string $password): bool
-    {
-        session_start();
-        $user = $this->getCurrentUser();
-
-        if (!$user)
+        if ($this->user)
         {
-            return false;
+            return $this->user;
         }
 
-        if (!password_verify($password, $user->getPassword()))
+        if (isset($_SESSION['user_id']))
+        {
+            $this->user = User::getById($_SESSION['user_id']);
+            return $this->user;
+        }
+
+        return null;
+    }
+
+    public function login(LoginRequest $request): bool
+    {
+        $user = User::getOneByEmail($request->getEmail());
+
+        if (!$user || !password_verify($request->getPassword(), $user->getPassword()))
         {
             return false;
         }

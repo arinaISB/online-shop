@@ -17,8 +17,6 @@ class LoginRequest extends Request
             $errors['email'] = 'Email is required';
         } elseif (empty($password)) {
             $errors['password'] = 'Password is required';
-        } elseif (empty($this->body)) {
-            $errors['email'] = 'You are not registered';
         }
 
         return $errors;
