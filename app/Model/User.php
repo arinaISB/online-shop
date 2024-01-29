@@ -4,10 +4,10 @@ namespace Model;
 
 class User extends Model
 {
-    private ?int $id;
-    private ?string $name;
-    private ?string $email;
-    private ?string $password;
+    private int $id;
+    private string $name;
+    private string $email;
+    private string $password;
 
     public function __construct(?int $id = null, ?string $name = null, ?string $email = null, ?string $password = null)
     {
@@ -40,10 +40,10 @@ class User extends Model
     public static function hydrate(array $data): static
     {
         return new static(
-            $data['id'] ?? null,
-            $data['name'] ?? null,
-            $data['email'] ?? null,
-            $data['password'] ?? null,
+            $data['id'],
+            $data['name'],
+            $data['email'],
+            $data['password'],
         );
     }
 

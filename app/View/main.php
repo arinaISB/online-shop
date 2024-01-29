@@ -18,7 +18,10 @@
                             <input type="hidden" name="product_id" value="<?php echo $product->getId(); ?>">
                             <label style="color: red"><?php echo $errors['add_product'] ?? ''; ?></label>
                             <label>
-                                <input type="number" name="quantity" value="1" min="1">
+<!--                                <input type="number" name="quantity" value="1" min="1">-->
+                                <input type="submit" name="minus" value="--"/>
+                                <input type="text" name="sum" value="<?=$sum;?>" size="1"/>
+                                <input type="submit" name="add" value="++"/>
                                 <label style="color: red"><?php echo $errors['quantity'] ?? ''; ?></label>
                             </label>
                             <input type="submit" name="add_to_cart" value="Add to cart">

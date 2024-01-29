@@ -41,10 +41,10 @@ class Product extends Model
     public static function hydrate(array $data): static
     {
         return new static(
-            $data['id'] ?? null,
-            $data['name'] ?? null,
-            $data['price'] ?? null,
-            $data['link'] ?? null,
+            $data['id'],
+            $data['name'],
+            $data['price'],
+            $data['link'],
         );
     }
 

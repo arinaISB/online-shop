@@ -7,7 +7,7 @@ use Request\LoginRequest;
 
 class AuthenticationService
 {
-    private ?User $user = null;
+    private User $user;
 
     public function check(): bool
     {
@@ -17,10 +17,10 @@ class AuthenticationService
 
     public function getCurrentUser(): User|null
     {
-        if ($this->user)
-        {
-            return $this->user;
-        }
+//        if (isset($this->user))
+//        {
+//            return $this->user;
+//        }
 
         if (isset($_SESSION['user_id']))
         {

@@ -29,6 +29,14 @@ class CartController
 
         $userId = $this->authenticationService->getCurrentUser()->getId();
         $cart = Cart::getOneByUserId($userId);
+
+        if (empty($cart))
+        {
+            Cart::create($userId);
+            $cart = Cart::getOneByUserId($userId);
+
+        }
+
         $productsInCart = CartProduct::getAllByCartId($cart->getId());
 
         $errors = $this->check($userId, $cart, $productsInCart);

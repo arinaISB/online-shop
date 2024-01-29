@@ -47,18 +47,18 @@ class OrderedCart extends Model
     public static function hydrate(array $data): static
     {
         return new static(
-            $data['id'] ?? null,
-            $data['placedOrderId'] ?? null,
-            $data['productId'] ?? null,
-            $data['quantity'] ?? null,
-            $data['productLineTotal'] ?? null,
+            $data['id'],
+            $data['placed_order_id'],
+            $data['placed_order_id'],
+            $data['quantity'],
+            $data['line_total'],
         );
     }
 
     public static function addOrderedItems(int $placedOrderId, int $productId, int $quantity, int $productLineTotal): OrderedCart|null
     {
         $statement = static::getPdo()->prepare("INSERT INTO ordered_items (placed_order_id, product_id, quantity, line_total) VALUES (:placed_order_id, :product_id, :quantity, :line_total)");
-        $statement->execute(['placed_order_id' => $placedOrderId, 'product_id' => $productId, 'quantity' => $quantity, 'line_total' => $productLineTotal]);
+        $statement->execute(['placed_order_id' => $placedOrderId, 'placed_order_id' => $productId, 'quantity' => $quantity, 'line_total' => $productLineTotal]);
         $result = $statement->fetch();
 
         if (empty($result))

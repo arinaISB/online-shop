@@ -40,10 +40,10 @@ class CartProduct extends Model
     public static function hydrate(array $data): static
     {
         return new static(
-            $data['id'] ?? null,
-            $data['cartId'] ?? null,
-            $data['productId'] ?? null,
-            $data['quantity'] ?? null,
+            $data['id'],
+            $data['cart_id'],
+            $data['product_id'],
+            $data['quantity'],
         );
     }
 

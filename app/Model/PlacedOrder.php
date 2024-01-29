@@ -75,15 +75,15 @@ class PlacedOrder extends Model
     public static function hydrate(array $data): static
     {
         return new static(
-            $data['id'] ?? null,
-            $data['total'] ?? null,
-            $data['email'] ?? null,
-            $data['phone'] ?? null,
-            $data['userName'] ?? null,
-            $data['address'] ?? null,
-            $data['city'] ?? null,
-            $data['country'] ?? null,
-            $data['postal'] ?? null,
+            $data['id'],
+            $data['total'],
+            $data['email'],
+            $data['phone'],
+            $data['userName'],
+            $data['address'],
+            $data['city'],
+            $data['country'],
+            $data['postal'],
         );
     }
 

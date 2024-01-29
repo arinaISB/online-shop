@@ -28,6 +28,17 @@ class MainController
             exit;
         }
 
+        $sum=0;
+        if(isset($_POST['minus'])){
+            $sum = $_POST['sum'];
+            $sum--;
+        }
+
+        if(isset($_POST['add'])){
+            $sum = $_POST['sum'];
+            $sum++;
+        }
+
         require_once './../View/main.php';
     }
 }
