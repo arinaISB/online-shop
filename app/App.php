@@ -4,6 +4,8 @@ use Request\Request;
 
 class App
 {
+    private array $routes = [];
+
     public function run(): void
     {
         $requestUri = $_SERVER['REQUEST_URI'];
