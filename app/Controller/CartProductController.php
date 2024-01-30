@@ -3,8 +3,7 @@
 namespace Controller;
 use Model\Cart;
 use Model\CartProduct;
-use Request\MinusProductRequest;
-use Request\PlusProductRequest;
+use Request\EditQuantityProductRequest;
 use Service\AuthenticationService;
 
 class CartProductController
@@ -27,7 +26,7 @@ class CartProductController
         require_once './../View/main.php';
     }
 
-    public function plusProduct(PlusProductRequest $request): void
+    public function editQuantity(EditQuantityProductRequest $request): void
     {
         $result = $this->authenticationService->check();
         if (!$result)
@@ -42,56 +41,32 @@ class CartProductController
             $productId = $request->getProductId();
             $userId = $this->authenticationService->getCurrentUser()->getId();
             $cart = Cart::getOneByUserId($userId);
+            $action = $request->getAction();
 
-            if (!empty($cart)) {
+            if ($cart && ($action === 'minus' || $action === 'add')) {
                 $cartProduct = CartProduct::get($cart->getId(), $productId);
 
-                if (empty($cartProduct)) {
-                    CartProduct::add($cart->getId(), $productId, 1);
-                } else {
-                    $currentQuantity = $cartProduct->getQuantity();
-                    $newQuantity = $currentQuantity + 1;
-                    CartProduct::updateProductQuantity($cart->getId(), $productId, $newQuantity);
-                }
-            } else {
-                Cart::create($userId);
-                $cart = Cart::getOneByUserId($userId);
-                CartProduct::add($cart->getId(), $productId, 1);
-            }
-
-            header("Location: /main");
-        }
-    }
-
-    public function minusProduct(MinusProductRequest $request): void
-    {
-        $result = $this->authenticationService->check();
-        if (!$result)
-        {
-            header("Location: /login");
-        }
-
-        $errors = $request->validate();
-
-        if (empty($errors))
-        {
-            $productId = $request->getProductId();
-
-            $userId = $this->authenticationService->getCurrentUser()->getId();
-            $cart = Cart::getOneByUserId($userId);
-
-            if (!empty($cart)) {
-                $cartProduct = CartProduct::get($cart->getId(), $productId);
-
-                if (!empty($cartProduct)) {
-                    $currentQuantity = $cartProduct->getQuantity();
-                    if ($currentQuantity > 1) {
-                        $newQuantity = $currentQuantity - 1;
+                if ($action === 'minus') {
+                    if ($cartProduct && $cartProduct->getQuantity() > 1) {
+                        $newQuantity = $cartProduct->getQuantity() - 1;
                         CartProduct::updateProductQuantity($cart->getId(), $productId, $newQuantity);
                     } else {
                         CartProduct::deleteProduct($cart->getId(), $productId);
                     }
                 }
+
+                if ($action === 'add') {
+                    if ($cartProduct) {
+                        $newQuantity = $cartProduct->getQuantity() + 1;
+                        CartProduct::updateProductQuantity($cart->getId(), $productId, $newQuantity);
+                    } else {
+                        CartProduct::add($cart->getId(), $productId, 1);
+                    }
+                }
+            } elseif ($action === 'add') {
+                Cart::create($userId);
+                $cart = Cart::getOneByUserId($userId);
+                CartProduct::add($cart->getId(), $productId, 1);
             }
 
             header("Location: /main");

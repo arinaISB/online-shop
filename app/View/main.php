@@ -10,17 +10,19 @@
                         <?php echo $product->getPrice(); ?> ₽
                     </div>
                     <div class="add">
-                        <form action="/minus-product" method="POST" class="add-form">
+                        <form action="/edit-quantity-product" method="POST">
                             <input type="hidden" name="product_id" value="<?=$product->getId();?>">
-                            <label style="color: red"><?php echo $errors['remove_product'] ?? ''; ?></label>
-                            <input type="submit" name="minus" class="quantity-button" value="-"/>
+                            <button type="submit" name="action" value="minus">--</button>
                         </form>
-                        <form action="/plus-product" method="POST" class="add-form">
-                            <input type="hidden" name="product_id" value="<?php echo $product->getId(); ?>">
-                            <label style="color: red"><?php echo $errors['add_product'] ?? ''; ?></label>
-                            <input type="submit" name="plus" class="quantity-button" value="+"/>
-                            <input type="text" name="quantity" value="<?=($quantitiesOfEachProductInTheCart[$product->getId()] ?? 0);?>" size="1" readonly/>
+
+                        <form action="/edit-quantity-product" method="POST">
+                            <input type="hidden" name="product_id" value="<?=$product->getId();?>">
+                            <button type="submit" name="action" value="add">++</button>
                         </form>
+
+                        <label>
+                            <input type="text" name="quantity" value="<?=$quantitiesOfEachProductInTheCart[$product->getId()] ?? 0;?>" size="1" readonly/>
+                        </label>
                     </div>
                 </div>
         </div>
@@ -31,12 +33,12 @@
             <a href="/placeOrder" class="checkout-button">Place order</a>
         </form>
     </div>
-    <div class="cart">
-        <form action="/cart" method="post">
-            <a href="/cart" class="checkout-button">Cart</a>
-        </form>
-    </div>
+    <a href="/cart" class="cart">
+        <span class="count">1</span>
+        <i class="material-icons">shopping_cart</i>
+    </a>
 </div>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 <div class="logout">
     <form action="/logout" method="post">
         <button type="submit" class="logout-button">Log out</button>
@@ -50,6 +52,7 @@
 
     .container {
         padding: 20px;
+        position: relative;
     }
 
     .card-text {
@@ -95,12 +98,6 @@
     .card:hover {
         box-shadow: 1px 2px 10px lightgray;
         transition: 0.2s;
-    }
-
-    .card-header {
-        font-size: 13px;
-        color: gray;
-        background-color: white;
     }
 
     .text-muted {
@@ -150,10 +147,46 @@
         background-color: #53ef7d;
     }
 
-    .add-form {
-        display: flex;
-        align-items: center;
-        gap: 10px;
+
+    .cart {
+        position: absolute;
+        top: 10px;
+        right: 20px;
+        display: block;
+        width: 28px;
+        height: 28px;
+        height: auto;
+        overflow: hidden;
+        cursor: pointer;
     }
 
+    .cart:hover {
+        opacity: 0.8;
+    }
+
+    .cart .material-icons {
+        position: relative;
+        top: 4px;
+        z-index: 1;
+        font-size: 24px;
+        color: #131212;
+    }
+
+    .cart .count {
+        position: absolute;
+        top: 0;
+        right: 0;
+        z-index: 2;
+        font-size: 11px;
+        border-radius: 50%;
+        background: #53ef7d;
+        width: 16px;
+        height: 16px;
+        line-height: 16px;
+        display: block;
+        text-align: center;
+        color: white;
+        font-family: 'Roboto', sans-serif;
+        font-weight: bold;
+    }
 </style>

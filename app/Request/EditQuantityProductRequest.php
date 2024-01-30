@@ -2,11 +2,22 @@
 
 namespace Request;
 
-class PlusProductRequest extends Request
+class EditQuantityProductRequest extends Request
 {
+    public function getProductId()
+    {
+        return $this->body['product_id'];
+    }
+
+    public function getAction()
+    {
+        return $this->body['action'];
+    }
+
     public function validate(): array
     {
         $errors = [];
+
         $productId = $this->getProductId();
 
         if (empty($productId))
@@ -15,10 +26,5 @@ class PlusProductRequest extends Request
         }
 
         return $errors;
-    }
-
-    public function getProductId()
-    {
-        return $this->body['product_id'];
     }
 }
