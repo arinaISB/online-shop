@@ -3,28 +3,23 @@
     <div class="card-deck">
         <?php foreach ($products as $product): ?>
         <div class="card text-center">
-                <!--<div class="card-header">
-                    Hit!
-                </div> -->
                 <img class="card-img-top" src="<?php echo $product->getLink(); ?>" alt="Card image">
                 <div class="card-body">
                     <p class="card-text text-muted"><?php echo $product->getName(); ?></p>
-                    <!--<a href="#"><h5 class="card-title">Very long item name</h5></a>-->
                     <div class="card-footer">
                         <?php echo $product->getPrice(); ?> ₽
                     </div>
                     <div class="add">
-                        <form action="/add-product" method="POST">
+                        <form action="/minus-product" method="POST" class="add-form">
+                            <input type="hidden" name="product_id" value="<?=$product->getId();?>">
+                            <label style="color: red"><?php echo $errors['remove_product'] ?? ''; ?></label>
+                            <input type="submit" name="minus" class="quantity-button" value="-"/>
+                        </form>
+                        <form action="/plus-product" method="POST" class="add-form">
                             <input type="hidden" name="product_id" value="<?php echo $product->getId(); ?>">
                             <label style="color: red"><?php echo $errors['add_product'] ?? ''; ?></label>
-                            <label>
-                                <input type="number" name="quantity" value="1" min="1">
-<!--                                <input type="submit" name="minus" value="--"/>-->
-<!--                                <input type="text" name="sum" value="--><?php //=$sum;?><!--" size="1"/>-->
-<!--                                <input type="submit" name="add" value="++"/>-->
-                                <label style="color: red"><?php echo $errors['quantity'] ?? ''; ?></label>
-                            </label>
-                            <input type="submit" name="add_to_cart" value="Add to cart">
+                            <input type="submit" name="plus" class="quantity-button" value="+"/>
+                            <input type="text" name="quantity" value="<?=($quantitiesOfEachProductInTheCart[$product->getId()] ?? 0);?>" size="1" readonly/>
                         </form>
                     </div>
                 </div>
@@ -155,7 +150,10 @@
         background-color: #53ef7d;
     }
 
-    .add-more-button {
-        display: none;
+    .add-form {
+        display: flex;
+        align-items: center;
+        gap: 10px;
     }
+
 </style>

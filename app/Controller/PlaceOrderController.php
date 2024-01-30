@@ -32,7 +32,6 @@ class PlaceOrderController
         list($cart, $viewData) = $this->extracted();
 
         require_once './../View/place_order.php';
-
     }
 
     public function placeOrderForm(PlaceOrderFormRequest $request): void
@@ -92,9 +91,6 @@ class PlaceOrderController
         return $errors;
     }
 
-    /**
-     * @return array|void
-     */
     public function extracted()
     {
         $userId = $this->authenticationService->getCurrentUser()->getId();
@@ -109,6 +105,7 @@ class PlaceOrderController
         }
 
         $viewData = CartResource::format($cart);
+
         return array($cart, $viewData);
     }
 }

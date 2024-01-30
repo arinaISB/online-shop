@@ -1,6 +1,8 @@
 <?php
 
 namespace Controller;
+use Model\Cart;
+use Model\CartProduct;
 use Model\Product;
 use Service\AuthenticationService;
 
@@ -28,16 +30,19 @@ class MainController
             exit;
         }
 
-//        $sum=0;
-//        if(isset($_POST['minus'])){
-//            $sum = $_POST['sum'];
-//            $sum--;
-//        }
-//
-//        if(isset($_POST['add'])){
-//            $sum = $_POST['sum'];
-//            $sum++;
-//        }
+        $userId = $this->authenticationService->getCurrentUser()->getId();
+        $cart = Cart::getOneByUserId($userId);
+        $quantitiesOfEachProductInTheCart = [];
+
+        if (!empty($cart)) {
+            $cartProducts = CartProduct::getAllByCartId($cart->getId());
+
+            foreach ($cartProducts as $cartProduct) {
+                $productId = $cartProduct->getProductId();
+                $quantity = $cartProduct->getQuantity();
+                $quantitiesOfEachProductInTheCart[$productId] = $quantity;
+            }
+        }
 
         require_once './../View/main.php';
     }
