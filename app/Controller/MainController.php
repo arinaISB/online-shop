@@ -4,6 +4,7 @@ namespace Controller;
 use Model\Cart;
 use Model\CartProduct;
 use Model\Product;
+use Resource\CartResource;
 use Service\AuthenticationService;
 
 class MainController
@@ -43,6 +44,9 @@ class MainController
                 $quantitiesOfEachProductInTheCart[$productId] = $quantity;
             }
         }
+
+        $cartResource = CartResource::format($cart);
+        $uniqueProductCount = $cartResource['uniqueProductCount'];
 
         require_once './../View/main.php';
     }

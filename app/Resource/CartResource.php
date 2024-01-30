@@ -12,9 +12,11 @@ class CartResource
         $cartProducts = CartProduct::getAllByCartId($cart->getId());
 
         $products = [];
+        $uniqueProductCount = 0;
         foreach ($cartProducts as $cartProduct)
         {
             $products[] = CartProductResource::format($cartProduct);
+            $uniqueProductCount++;
         }
 
         $totalPrice = 0;
@@ -27,6 +29,7 @@ class CartResource
             'cart' => $cart,
             'products' => $products,
             'totalPrice' => $totalPrice,
+            'uniqueProductCount' => $uniqueProductCount
         ];
     }
 }
