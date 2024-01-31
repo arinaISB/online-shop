@@ -50,7 +50,9 @@ class PlaceOrderController
             list($cart, $viewData) = $this->extracted();
             $placedOrderId = $this->createPlacedOrder($request, $viewData['totalPrice']);
 
-            foreach ($viewData['products'] as $productInCart)
+            $cartProducts = CartProduct::getAllByCartId($cart->getId());
+
+            foreach ($cartProducts as $productInCart)
             {
                 $product = CartProductResource::format($productInCart);
                 OrderedCart::addOrderedItems($placedOrderId, $product['id'], $productInCart->getQuantity(), $product['lineTotal']);
