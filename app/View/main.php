@@ -1,43 +1,32 @@
+<body>
 <div class="container">
     <h3>Catalog</h3>
     <div class="card-deck">
         <?php foreach ($products as $product): ?>
-        <div class="card text-center">
+            <div class="card text-center">
                 <img class="card-img-top" src="<?php echo $product->getLink(); ?>" alt="Card image">
                 <div class="card-body">
                     <p class="card-text text-muted"><?php echo $product->getName(); ?></p>
                     <div class="card-footer">
                         <?php echo $product->getPrice(); ?> ₽
                     </div>
-                    <div class="add">
-                        <form action="/minus-product" method="POST" class="add-form">
+                    <div class="quantity-button">
+                        <form action="/minus-product" method="POST" class="minus-form">
                             <input type="hidden" name="product_id" value="<?=$product->getId();?>">
                             <label style="color: red"><?php echo $errors['remove_product'] ?? ''; ?></label>
-                            <input type="submit" name="minus" class="quantity-button" value="-"/>
+                            <button type="submit" name="minus" class="quantity-button minus">-</button>
                         </form>
-
-                        <form action="/plus-product" method="POST" class="add-form">
+                        <form action="/plus-product" method="POST" class="plus-form">
                             <input type="hidden" name="product_id" value="<?php echo $product->getId(); ?>">
                             <label style="color: red"><?php echo $errors['add_product'] ?? ''; ?></label>
-                            <input type="submit" name="plus" class="quantity-button" value="+"/>
+                            <button type="submit" name="plus" class="quantity-button plus">+</button>
                         </form>
-
-<!--                        <form action="/edit-quantity-product" method="POST">-->
-<!--                            <input type="hidden" name="product_id" value="--><?php //=$product->getId();?><!--">-->
-<!--                            <button type="submit" name="action" value="minus">--</button>-->
-<!--                        </form>-->
-<!---->
-<!--                        <form action="/edit-quantity-product" method="POST">-->
-<!--                            <input type="hidden" name="product_id" value="--><?php //=$product->getId();?><!--">-->
-<!--                            <button type="submit" name="action" value="add">++</button>-->
-<!--                        </form>-->
-
                         <label>
                             <input type="text" name="quantity" value="<?=$quantitiesOfEachProductInTheCart[$product->getId()] ?? 0;?>" size="1" readonly/>
                         </label>
                     </div>
                 </div>
-        </div>
+            </div>
         <?php endforeach; ?>
     </div>
     <div class="placeOrder">
@@ -56,6 +45,62 @@
         <button type="submit" class="logout-button">Log out</button>
     </form>
 </div>
+</body>
+
+<script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+<script>
+    $("document").ready(function() {
+        $('.minus-form').submit(function(event) {
+            event.preventDefault();
+
+            var form = $(this);
+            var productId = form.find('input[name="product_id"]').val();
+            var quantityInput = form.closest('.quantity-button').find('input[name="quantity"]');
+            var quantity = parseInt(quantityInput.val());
+
+            quantity--;
+            if (quantity < 0) {
+                quantity = 0;
+            }
+
+            $.ajax({
+                type: "POST",
+                url: form.attr('action'),
+                data: {
+                    product_id: productId,
+                    quantity: quantity
+                },
+                success: function() {
+                    quantityInput.val(quantity);
+                },
+            });
+        });
+
+
+        $('.plus-form').submit(function(event) {
+            event.preventDefault();
+
+            var form = $(this);
+            var productId = form.find('input[name="product_id"]').val();
+            var quantityInput = form.closest('.quantity-button').find('input[name="quantity"]');
+            var quantity = parseInt(quantityInput.val());
+
+            quantity++;
+
+            $.ajax({
+                type: "POST",
+                url: form.attr('action'),
+                data: {
+                    product_id: productId,
+                    quantity: quantity
+                },
+                success: function () {
+                    quantityInput.val(quantity);
+                },
+            });
+        });
+    });
+</script>
 
 <style>
     body {

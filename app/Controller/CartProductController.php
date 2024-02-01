@@ -3,7 +3,6 @@
 namespace Controller;
 use Model\Cart;
 use Model\CartProduct;
-use Model\Product;
 use Request\MinusProductRequest;
 use Request\PlusProductRequest;
 use Service\AuthenticationService;
@@ -60,7 +59,6 @@ class CartProductController
             }
 
             header("Location: /main");
-            require_once './../View/main.php';
         }
     }
 
