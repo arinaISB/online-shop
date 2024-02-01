@@ -10,15 +10,27 @@
                         <?php echo $product->getPrice(); ?> ₽
                     </div>
                     <div class="add">
-                        <form action="/edit-quantity-product" method="POST">
+                        <form action="/minus-product" method="POST" class="add-form">
                             <input type="hidden" name="product_id" value="<?=$product->getId();?>">
-                            <button type="submit" name="action" value="minus">--</button>
+                            <label style="color: red"><?php echo $errors['remove_product'] ?? ''; ?></label>
+                            <input type="submit" name="minus" class="quantity-button" value="-"/>
                         </form>
 
-                        <form action="/edit-quantity-product" method="POST">
-                            <input type="hidden" name="product_id" value="<?=$product->getId();?>">
-                            <button type="submit" name="action" value="add">++</button>
+                        <form action="/plus-product" method="POST" class="add-form">
+                            <input type="hidden" name="product_id" value="<?php echo $product->getId(); ?>">
+                            <label style="color: red"><?php echo $errors['add_product'] ?? ''; ?></label>
+                            <input type="submit" name="plus" class="quantity-button" value="+"/>
                         </form>
+
+<!--                        <form action="/edit-quantity-product" method="POST">-->
+<!--                            <input type="hidden" name="product_id" value="--><?php //=$product->getId();?><!--">-->
+<!--                            <button type="submit" name="action" value="minus">--</button>-->
+<!--                        </form>-->
+<!---->
+<!--                        <form action="/edit-quantity-product" method="POST">-->
+<!--                            <input type="hidden" name="product_id" value="--><?php //=$product->getId();?><!--">-->
+<!--                            <button type="submit" name="action" value="add">++</button>-->
+<!--                        </form>-->
 
                         <label>
                             <input type="text" name="quantity" value="<?=$quantitiesOfEachProductInTheCart[$product->getId()] ?? 0;?>" size="1" readonly/>

@@ -3,7 +3,9 @@
 namespace Controller;
 use Model\Cart;
 use Model\CartProduct;
-use Request\EditQuantityProductRequest;
+use Model\Product;
+use Request\MinusProductRequest;
+use Request\PlusProductRequest;
 use Service\AuthenticationService;
 
 class CartProductController
@@ -26,7 +28,7 @@ class CartProductController
         require_once './../View/main.php';
     }
 
-    public function editQuantity(EditQuantityProductRequest $request): void
+    public function minusQuantity(MinusProductRequest $request): void
     {
         $result = $this->authenticationService->check();
         if (!$result)
@@ -39,31 +41,57 @@ class CartProductController
         if (empty($errors))
         {
             $productId = $request->getProductId();
+
             $userId = $this->authenticationService->getCurrentUser()->getId();
             $cart = Cart::getOneByUserId($userId);
-            $action = $request->getAction();
 
-            if ($cart && ($action === 'minus' || $action === 'add')) {
+            if (!empty($cart)) {
                 $cartProduct = CartProduct::get($cart->getId(), $productId);
 
-                if ($action === 'minus') {
-                    if ($cartProduct && $cartProduct->getQuantity() > 1) {
-                        $newQuantity = $cartProduct->getQuantity() - 1;
+                if (!empty($cartProduct)) {
+                    $currentQuantity = $cartProduct->getQuantity();
+                    if ($currentQuantity > 1) {
+                        $newQuantity = $currentQuantity - 1;
                         CartProduct::updateProductQuantity($cart->getId(), $productId, $newQuantity);
                     } else {
                         CartProduct::deleteProduct($cart->getId(), $productId);
                     }
                 }
+            }
 
-                if ($action === 'add') {
-                    if ($cartProduct) {
-                        $newQuantity = $cartProduct->getQuantity() + 1;
-                        CartProduct::updateProductQuantity($cart->getId(), $productId, $newQuantity);
-                    } else {
-                        CartProduct::add($cart->getId(), $productId, 1);
-                    }
+            header("Location: /main");
+            require_once './../View/main.php';
+        }
+    }
+
+    public function plusQuantity(PlusProductRequest $request): void
+    {
+        $result = $this->authenticationService->check();
+        if (!$result)
+        {
+            header("Location: /login");
+        }
+
+        $errors = $request->validate();
+
+        if (empty($errors))
+        {
+            $productId = $request->getProductId();
+
+            $userId = $this->authenticationService->getCurrentUser()->getId();
+            $cart = Cart::getOneByUserId($userId);
+
+            if (!empty($cart)) {
+                $cartProduct = CartProduct::get($cart->getId(), $productId);
+
+                if (empty($cartProduct)) {
+                    CartProduct::add($cart->getId(), $productId, 1);
+                } else {
+                    $currentQuantity = $cartProduct->getQuantity();
+                    $newQuantity = $currentQuantity + 1;
+                    CartProduct::updateProductQuantity($cart->getId(), $productId, $newQuantity);
                 }
-            } elseif ($action === 'add') {
+            } else {
                 Cart::create($userId);
                 $cart = Cart::getOneByUserId($userId);
                 CartProduct::add($cart->getId(), $productId, 1);
