@@ -24,6 +24,7 @@ $app->get('/main', MainController::class, 'getProducts');
 $app->get('/add-product', CartProductController::class, 'getAddProductForm');
 $app->get('/placeOrder', PlaceOrderController::class, 'getPlaceOrderForm');
 $app->get('/cart', CartController::class, 'getCartForm');
+$app->get('/updateUniqueProductCount', MainController::class, 'updateUniqueProductCount');
 
 $app->post('/registration', UserController::class, 'registration', RegistrationRequest::class);
 $app->post('/login', UserController::class, 'login', LoginRequest::class);

@@ -50,7 +50,7 @@
 <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
 <script>
     $("document").ready(function() {
-        $('.minus-form').submit(function(event) {
+        $('.minus-form').on("submit", function(event) {
             event.preventDefault();
 
             var form = $(this);
@@ -72,12 +72,21 @@
                 },
                 success: function() {
                     quantityInput.val(quantity);
+
+                    // Обновить уникальное количество продуктов
+                    $.ajax({
+                        type: "GET",
+                        url: "/updateUniqueProductCount",
+                        success: function (data) {
+                            $(".count").text(data);
+                        }
+                    });
                 },
             });
         });
 
 
-        $('.plus-form').submit(function(event) {
+        $('.plus-form').on("submit", function(event) {
             event.preventDefault();
 
             var form = $(this);
@@ -96,6 +105,15 @@
                 },
                 success: function () {
                     quantityInput.val(quantity);
+
+                    // Обновить уникальное количество продуктов
+                    $.ajax({
+                        type: "GET",
+                        url: "/updateUniqueProductCount",
+                        success: function (data) {
+                            $(".count").text(data);
+                        }
+                    });
                 },
             });
         });

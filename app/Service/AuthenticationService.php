@@ -3,7 +3,6 @@
 namespace Service;
 
 use Model\User;
-use Request\LoginRequest;
 
 class AuthenticationService
 {
@@ -20,6 +19,10 @@ class AuthenticationService
         if (isset($this->user))
         {
             return $this->user;
+        }
+
+        if (session_status() == PHP_SESSION_NONE) {
+            session_start();
         }
 
         if (isset($_SESSION['user_id']))

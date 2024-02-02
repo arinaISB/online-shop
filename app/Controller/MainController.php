@@ -50,4 +50,16 @@ class MainController
 
         require_once './../View/main.php';
     }
+
+    public function updateUniqueProductCount(): void
+    {
+        $userId = $this->authenticationService->getCurrentUser()->getId();
+        $cart = Cart::getOneByUserId($userId);
+
+
+        $cartResource = CartResource::format($cart);
+        $updatedUniqueProductCount = $cartResource['uniqueProductCount'];
+
+        echo $updatedUniqueProductCount;
+    }
 }
