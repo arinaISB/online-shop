@@ -4,20 +4,20 @@ namespace Controller;
 
 use Model\Cart;
 use Model\CartProduct;
-use Model\OrderedCart;
-use Model\PlacedOrder;
 use Request\PlaceOrderFormRequest;
-use Resource\CartProductResource;
 use Resource\CartResource;
 use Service\AuthenticationInterface;
+use Service\OrderService;
 
 class PlaceOrderController
 {
     private AuthenticationInterface $authenticationService;
+    private OrderService $orderService;
 
     public function __construct(AuthenticationInterface $authenticationService)
     {
         $this->authenticationService = $authenticationService;
+        $this->orderService = new OrderService();
     }
 
     public function getPlaceOrderForm(): void
@@ -34,7 +34,7 @@ class PlaceOrderController
         require_once './../View/place_order.php';
     }
 
-    public function placeOrderForm(PlaceOrderFormRequest $request): void
+    public function placeOrder(PlaceOrderFormRequest $request): void
     {
         $result = $this->authenticationService->check();
 
@@ -48,35 +48,12 @@ class PlaceOrderController
         if (empty($errors))
         {
             list($cart, $viewData) = $this->extracted();
-            $placedOrderId = $this->createPlacedOrder($request, $viewData['totalPrice']);
-
-            $cartProducts = CartProduct::getAllByCartId($cart->getId());
-
-            foreach ($cartProducts as $productInCart)
-            {
-                $product = CartProductResource::format($productInCart);
-                OrderedCart::addOrderedItems($placedOrderId, $product['id'], $productInCart->getQuantity(), $product['lineTotal']);
-                CartProduct::deleteProduct($cart->getId(), $product['id']);
-            }
+            $this->orderService->create($request->getEmail(), $request->getPhone(), $request->getName(), $request->getAddress(), $request->getCity(), $request->getCountry(), $request->getPostal(), $viewData['totalPrice'], $cart);
 
             header("Location: /main");
         }
 
         require_once './../View/place_order.php';
-    }
-
-
-    private function createPlacedOrder(PlaceOrderFormRequest $request, $totalPrice): string
-    {
-        $email = $request->getEmail();
-        $phone = $request->getPhone();
-        $userName = $request->getName();
-        $address = $request->getAddress();
-        $city = $request->getCity();
-        $country = $request->getCountry();
-        $postal = $request->getPostal();
-
-        return PlacedOrder::addAndGetId($totalPrice, $email, $phone, $userName, $address, $city, $country, $postal);
     }
 
     public function check($userId, $cart, $productsInCart): array

@@ -32,6 +32,6 @@ $app->post('/logout', UserController::class, 'logout');
 $app->post('/minus-product', CartProductController::class, 'minusQuantity', MinusProductRequest::class);
 $app->post('/plus-product', CartProductController::class, 'plusQuantity', PlusProductRequest::class);
 $app->post('/delete-product', CartController::class, 'deleteProduct', DeleteProductRequest::class);
-$app->post('/placeOrder', PlaceOrderController::class, 'placeOrderForm', PlaceOrderFormRequest::class);
+$app->post('/placeOrder', PlaceOrderController::class, 'placeOrder', PlaceOrderFormRequest::class);
 
 $app->run();
