@@ -3,7 +3,7 @@
 namespace Request;
 
 use Model\User;
-use Service\AuthenticationService;
+use Service\SessionAuthenticationService;
 
 class LoginRequest extends Request
 {

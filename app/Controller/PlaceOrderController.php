@@ -9,15 +9,16 @@ use Model\PlacedOrder;
 use Request\PlaceOrderFormRequest;
 use Resource\CartProductResource;
 use Resource\CartResource;
-use Service\AuthenticationService;
+use Service\AuthenticationInterface;
+use Service\SessionAuthenticationService;
 
 class PlaceOrderController
 {
-    private AuthenticationService $authenticationService;
+    private AuthenticationInterface $authenticationService;
 
-    public function __construct()
+    public function __construct(AuthenticationInterface $authenticationService)
     {
-        $this->authenticationService = new AuthenticationService();
+        $this->authenticationService = $authenticationService;
     }
 
     public function getPlaceOrderForm(): void

@@ -1,18 +1,19 @@
 <?php
 
 namespace Controller;
+
 use Model\User;
 use Request\LoginRequest;
 use Request\RegistrationRequest;
-use Service\AuthenticationService;
+use Service\AuthenticationInterface;
 
 class UserController
 {
-    private AuthenticationService $authenticationService;
+    private AuthenticationInterface $authenticationService;
 
-    public function __construct()
+    public function __construct(AuthenticationInterface $authenticationService)
     {
-        $this->authenticationService = new AuthenticationService();
+        $this->authenticationService = $authenticationService;
     }
 
     public function getRegistration(): void
@@ -24,7 +25,7 @@ class UserController
     {
         $errors = $request->validate();
 
-        if(empty($errors)) {
+        if (empty($errors)) {
             $name = $request->getName();
             $email = $request->getEmail();
             $password = $request->getPassword();
@@ -45,7 +46,7 @@ class UserController
     {
         $errors = $request->validate();
 
-        if(empty($errors)) {
+        if (empty($errors)) {
             $password = $request->getPassword();
             $email = $request->getEmail();
 
@@ -55,9 +56,10 @@ class UserController
                 header("Location: /main");
             } else {
                 $errors['email'] = 'Invalid password or email';
-                require_once './../View/login.php';
             }
         }
+
+        require_once './../View/login.php';
     }
 
 

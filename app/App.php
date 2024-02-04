@@ -1,6 +1,7 @@
 <?php
 
 use Request\Request;
+use Service\CookieAuthenticationService;
 
 class App
 {
@@ -21,7 +22,8 @@ class App
                 $method = $handler['method'];
                 $requestClass = $handler['request'] ?? Request::class; // иначе передается объект общего Request
 
-                $obj = new $class(); //создаем объект контроллера
+                $authenticationService = new CookieAuthenticationService();
+                $obj = new $class($authenticationService); //создаем объект контроллера
 
                 $request = new $requestClass($_POST); //создаем объект класса Request
                 $obj->$method($request);
