@@ -10,7 +10,6 @@ use Request\PlaceOrderFormRequest;
 use Resource\CartProductResource;
 use Resource\CartResource;
 use Service\AuthenticationInterface;
-use Service\SessionAuthenticationService;
 
 class PlaceOrderController
 {

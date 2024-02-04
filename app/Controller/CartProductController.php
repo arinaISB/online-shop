@@ -6,7 +6,6 @@ use Model\CartProduct;
 use Request\MinusProductRequest;
 use Request\PlusProductRequest;
 use Service\AuthenticationInterface;
-use Service\SessionAuthenticationService;
 
 class CartProductController
 {

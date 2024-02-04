@@ -35,7 +35,7 @@
         </form>
     </div>
     <a href="/cart" class="cart">
-        <span class="count"><?php echo $uniqueProductCount; ?></span>
+        <span class="count"><?php echo $uniqueProductCount ?? 0; ?></span>
         <i class="material-icons">shopping_cart</i>
     </a>
 </div>

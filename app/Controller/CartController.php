@@ -7,9 +7,6 @@ use Model\CartProduct;
 use Request\DeleteProductRequest;
 use Resource\CartResource;
 use Service\AuthenticationInterface;
-use Service\CookieAuthenticationService;
-use Service\SessionAuthenticationService;
-
 
 class CartController
 {
