@@ -17,11 +17,12 @@ class OrderService
         $pdo = Model::getPdo();
         $cart = Cart::getOneByUserId($user->getId());
         $cartProducts = CartProduct::getAllByCartId($cart->getId());
-        $orderId = $order->getId();
 
         $pdo->beginTransaction();
         try {
             $order->save();
+            $orderId = $order->getId();
+
             foreach ($cartProducts as $productInCart)
             {
                 $product = CartProductResource::format($productInCart);
