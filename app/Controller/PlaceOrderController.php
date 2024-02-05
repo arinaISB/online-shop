@@ -4,6 +4,7 @@ namespace Controller;
 
 use Model\Cart;
 use Model\CartProduct;
+use Model\PlacedOrder;
 use Request\PlaceOrderFormRequest;
 use Resource\CartResource;
 use Service\AuthenticationInterface;
@@ -48,7 +49,8 @@ class PlaceOrderController
         if (empty($errors))
         {
             list($cart, $viewData) = $this->extracted();
-            $this->orderService->create($request->getEmail(), $request->getPhone(), $request->getName(), $request->getAddress(), $request->getCity(), $request->getCountry(), $request->getPostal(), $viewData['totalPrice'], $cart);
+            $order = new PlacedOrder(null, $viewData['totalPrice'], $request->getEmail(), $request->getPhone(), $request->getName(), $request->getAddress(), $request->getCity(), $request->getPostal());
+            $this->orderService->create($order, $this->authenticationService->getCurrentUser());
 
             header("Location: /main");
         }

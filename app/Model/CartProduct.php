@@ -82,4 +82,11 @@ class CartProduct extends Model
         $statement = static::getPdo()->prepare("DELETE FROM cart_products WHERE cart_id = :cart_id AND product_id = :product_id");
         return $statement->execute(['cart_id' => $cartId, 'product_id' => $productId]);
     }
+
+    public static function deleteProductByCart(int $cartId): bool
+    {
+        $statement = static::getPdo()->prepare("DELETE FROM cart_products WHERE cart_id = :cart_id");
+        return $statement->execute(['cart_id' => $cartId]);
+    }
+
 }

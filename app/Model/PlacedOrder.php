@@ -79,4 +79,12 @@ class PlacedOrder extends Model
 
         return static::getPdo()->lastInsertId();
     }
+
+    public function save()
+    {
+        $statement = static::getPdo()->prepare("INSERT INTO placed_orders (total, email, phone, name, address, city, country, postal) VALUES (:total, :email, :phone, :userName, :address, :city, :country, :postal)");
+        $statement->execute(['total' => $this->total, 'email' => $this->email, 'phone' => $this->phone, 'userName' => $this->userName, 'address' => $this->address, 'city' => $this->city, 'country' => $this->country, 'postal' => $this->postal]);
+
+       $this->id = static::getPdo()->lastInsertId();
+    }
 }
