@@ -2,6 +2,7 @@
 
 namespace Controller;
 
+use Exception;
 use Model\User;
 use Request\LoginRequest;
 use Request\RegistrationRequest;
@@ -21,6 +22,10 @@ class UserController
         require_once './../View/registration.php';
     }
 
+
+    /**
+     * @throws Exception
+     */
     public function registration(RegistrationRequest $request): void
     {
         $errors = $request->validate();
@@ -29,6 +34,11 @@ class UserController
             $name = $request->getName();
             $email = $request->getEmail();
             $password = $request->getPassword();
+
+//            if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
+//                throw new Exception("Invalid email address provided: $email");
+//            }
+
             $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
             User::add($email, $name, $hashedPassword);

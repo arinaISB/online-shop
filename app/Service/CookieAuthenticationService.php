@@ -2,6 +2,7 @@
 
 namespace Service;
 
+use Exceptions\UserNotFoundExceptions;
 use Model\User;
 
 class CookieAuthenticationService implements AuthenticationInterface
@@ -13,7 +14,10 @@ class CookieAuthenticationService implements AuthenticationInterface
         return isset($_COOKIE['user_id']);
     }
 
-    public function getCurrentUser(): User|null
+    /**
+     * @return User
+     */
+    public function getCurrentUser(): User
     {
         if (isset($this->user))
         {
@@ -26,7 +30,8 @@ class CookieAuthenticationService implements AuthenticationInterface
             return $this->user;
         }
 
-        return null;
+        throw new UserNotFoundExceptions('User not found');
+//        return null;
     }
 
     public function login(string $password, string $email): bool

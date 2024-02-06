@@ -1,6 +1,7 @@
 <?php
 
 namespace Controller;
+use Exceptions\UserNotFoundExceptions;
 use Model\Cart;
 use Model\CartProduct;
 use Model\Product;
@@ -31,7 +32,13 @@ class MainController
             exit;
         }
 
-        $userId = $this->authenticationService->getCurrentUser()->getId();
+        try {
+            $user= $this->authenticationService->getCurrentUser();
+        } catch (UserNotFoundExceptions) {
+            require_once './../View/500.php';
+        }
+
+        $userId = $user->getId();
         $cart = Cart::getOneByUserId($userId);
         $quantitiesOfEachProductInTheCart = [];
 
@@ -53,9 +60,14 @@ class MainController
 
     public function updateUniqueProductCount(): void
     {
-        $userId = $this->authenticationService->getCurrentUser()->getId();
-        $cart = Cart::getOneByUserId($userId);
+        try {
+            $user= $this->authenticationService->getCurrentUser();
+        } catch (UserNotFoundExceptions) {
+            require_once './../View/500.php';
+        }
 
+        $userId = $user->getId();
+        $cart = Cart::getOneByUserId($userId);
 
         $cartResource = CartResource::format($cart);
         $updatedUniqueProductCount = $cartResource['uniqueProductCount'];

@@ -2,6 +2,8 @@
 
 namespace Controller;
 
+use Exception;
+use Exceptions\UserNotFoundExceptions;
 use Model\Cart;
 use Model\CartProduct;
 use Model\PlacedOrder;
@@ -23,9 +25,7 @@ class PlaceOrderController
 
     public function getPlaceOrderForm(): void
     {
-        $result = $this->authenticationService->check();
-
-        if (!$result)
+        if (!$this->authenticationService->check())
         {
             header("Location: /login");
         }
@@ -37,9 +37,7 @@ class PlaceOrderController
 
     public function placeOrder(PlaceOrderFormRequest $request): void
     {
-        $result = $this->authenticationService->check();
-
-        if (!$result)
+        if (!$this->authenticationService->check())
         {
             header("Location: /login");
         }
@@ -58,31 +56,31 @@ class PlaceOrderController
         require_once './../View/place_order.php';
     }
 
-    public function check($userId, $cart, $productsInCart): array
+    /**
+     * @throws Exception
+     */
+    public function extracted(): array
     {
-        $errors = [];
-        if (empty($userId)) {
-            $errors['userId'] = "User does not exist";
-        } elseif (empty($cart)) {
-            $errors['cart'] = "Cart does not exist";
-        } elseif (empty($productsInCart)) {
-            $errors['productsInCart'] = "Cart is empty";
+        try {
+            $user= $this->authenticationService->getCurrentUser();
+        } catch (UserNotFoundExceptions) {
+            require_once './../View/500.php';
         }
 
-        return $errors;
-    }
+        $userId = $user->getId();
 
-    public function extracted()
-    {
-        $userId = $this->authenticationService->getCurrentUser()->getId();
         $cart = Cart::getOneByUserId($userId);
+
+        if (empty($cart))
+        {
+            throw new Exception('Cart does not exist');
+        }
+
         $productsInCart = CartProduct::getAllByCartId($cart->getId());
 
-        $errors = $this->check($userId, $cart, $productsInCart);
-
-        if (!empty($errors)) {
-            require_once './../View/place_order.php';
-            exit;
+        if (empty($productsInCart))
+        {
+            throw new Exception('Cart is empty');
         }
 
         $viewData = CartResource::format($cart);

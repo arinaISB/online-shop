@@ -2,6 +2,7 @@
 
 use Request\Request;
 use Service\CookieAuthenticationService;
+use Service\LoggerService;
 
 class App
 {
@@ -26,7 +27,14 @@ class App
                 $obj = new $class($authenticationService); //создаем объект контроллера
 
                 $request = new $requestClass($_POST); //создаем объект класса Request
-                $obj->$method($request);
+
+                try {
+                    $obj->$method($request);
+                } catch (Throwable $exception) {
+                    LoggerService::logging($exception);
+
+                    require_once './../View/500.php';
+                }
             } else {
                 echo "Метод $requestMethod не поддерживается для $requestUri";
             }

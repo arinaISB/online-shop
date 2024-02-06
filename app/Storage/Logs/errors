@@ -1,0 +1,1 @@
+2024-02-06 14:41:26Message: Invalid email address provided: katya@gmail.com, Code: 0, File: /var/www/html/app/Controller/UserController.php, Line: 39

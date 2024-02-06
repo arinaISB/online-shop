@@ -2,6 +2,8 @@
 
 namespace Controller;
 
+use Exception;
+use Exceptions\UserNotFoundExceptions;
 use Model\Cart;
 use Model\CartProduct;
 use Request\DeleteProductRequest;
@@ -17,70 +19,73 @@ class CartController
         $this->authenticationService = $authenticationService;
     }
 
+    /**
+     * @throws Exception
+     */
     public function getCartForm(): void
     {
-        $result = $this->authenticationService->check();
-
-        if (!$result)
+        if (!$this->authenticationService->check())
         {
             header("Location: /login");
         }
 
-        $userId = $this->authenticationService->getCurrentUser()->getId();
+        try {
+            $user= $this->authenticationService->getCurrentUser();
+        } catch (UserNotFoundExceptions) {
+            require_once './../View/500.php';
+        }
+
+        $userId = $user->getId();
         $cart = Cart::getOneByUserId($userId);
 
         if (empty($cart))
         {
             Cart::create($userId);
             $cart = Cart::getOneByUserId($userId);
-
         }
 
         $productsInCart = CartProduct::getAllByCartId($cart->getId());
 
-        $errors = $this->check($userId, $cart, $productsInCart);
-
-        if (!empty($errors))
+        if (empty($productsInCart))
         {
-            require_once './../View/cart.php';
-            exit;
+            throw new Exception('Cart is empty');
         }
 
         $viewData = CartResource::format($cart);
         require_once './../View/cart.php';
     }
 
+    /**
+     * @throws Exception
+     */
     public function deleteProduct(DeleteProductRequest $request): void
     {
-        $result = $this->authenticationService->check();
-
-        if (!$result) {
+        if (!$this->authenticationService->check())
+        {
             header("Location: /login");
         }
 
         $errors = $request->validate();
 
         if (empty($errors)) {
-            $userId = $this->authenticationService->getCurrentUser()->getId();
+            try {
+                $user= $this->authenticationService->getCurrentUser();
+            } catch (UserNotFoundExceptions) {
+                require_once './../View/500.php';
+            }
+
+            $userId = $user->getId();
             $cart = Cart::getOneByUserId($userId);
+
+            if (empty($cart))
+            {
+                throw new Exception('Cart does not exist');
+            }
+
             $productId = $request->getProductId();
             CartProduct::deleteProduct($cart->getId(), $productId);
 
             header("Location: /cart");
         }
-    }
-
-    public function check($userId, $cart, $productsInCart): array
-    {
-        $errors = [];
-        if (empty($userId)) {
-           $errors['userId'] = "User does not exist";
-        } elseif (empty($cart)) {
-            $errors['cart'] = "Cart does not exist";
-        } elseif (empty($productsInCart)) {
-            $errors['productsInCart'] = "Cart is empty";
-        }
-
-        return $errors;
     }
 }

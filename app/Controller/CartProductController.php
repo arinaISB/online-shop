@@ -1,6 +1,8 @@
 <?php
 
 namespace Controller;
+use Exception;
+use Exceptions\UserNotFoundExceptions;
 use Model\Cart;
 use Model\CartProduct;
 use Request\MinusProductRequest;
@@ -18,8 +20,7 @@ class CartProductController
 
     public function getAddProductForm(): void
     {
-        $result = $this->authenticationService->check();
-        if (!$result)
+        if (!$this->authenticationService->check())
         {
             header("Location: /login");
         }
@@ -27,10 +28,12 @@ class CartProductController
         require_once './../View/main.php';
     }
 
+    /**
+     * @throws Exception
+     */
     public function minusQuantity(MinusProductRequest $request): void
     {
-        $result = $this->authenticationService->check();
-        if (!$result)
+        if (!$this->authenticationService->check())
         {
             header("Location: /login");
         }
@@ -41,20 +44,29 @@ class CartProductController
         {
             $productId = $request->getProductId();
 
-            $userId = $this->authenticationService->getCurrentUser()->getId();
+            try {
+                $user= $this->authenticationService->getCurrentUser();
+            } catch (UserNotFoundExceptions) {
+                require_once './../View/500.php';
+            }
+
+            $userId = $user->getId();
             $cart = Cart::getOneByUserId($userId);
 
-            if (!empty($cart)) {
-                $cartProduct = CartProduct::get($cart->getId(), $productId);
+            if (empty($cart))
+            {
+                throw new Exception('Cart does not exist');
+            }
 
-                if (!empty($cartProduct)) {
-                    $currentQuantity = $cartProduct->getQuantity();
-                    if ($currentQuantity > 1) {
-                        $newQuantity = $currentQuantity - 1;
-                        CartProduct::updateProductQuantity($cart->getId(), $productId, $newQuantity);
-                    } else {
-                        CartProduct::deleteProduct($cart->getId(), $productId);
-                    }
+            $cartProduct = CartProduct::get($cart->getId(), $productId);
+
+            if (!empty($cartProduct)) {
+                $currentQuantity = $cartProduct->getQuantity();
+                if ($currentQuantity > 1) {
+                    $newQuantity = $currentQuantity - 1;
+                    CartProduct::updateProductQuantity($cart->getId(), $productId, $newQuantity);
+                } else {
+                    CartProduct::deleteProduct($cart->getId(), $productId);
                 }
             }
 
@@ -64,8 +76,7 @@ class CartProductController
 
     public function plusQuantity(PlusProductRequest $request): void
     {
-        $result = $this->authenticationService->check();
-        if (!$result)
+        if (!$this->authenticationService->check())
         {
             header("Location: /login");
         }
@@ -76,7 +87,13 @@ class CartProductController
         {
             $productId = $request->getProductId();
 
-            $userId = $this->authenticationService->getCurrentUser()->getId();
+            try {
+                $user= $this->authenticationService->getCurrentUser();
+            } catch (UserNotFoundExceptions) {
+                require_once './../View/500.php';
+            }
+
+            $userId = $user->getId();
             $cart = Cart::getOneByUserId($userId);
 
             if (!empty($cart)) {
