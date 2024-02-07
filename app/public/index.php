@@ -5,6 +5,8 @@ use Controller\CartProductController;
 use Controller\MainController;
 use Controller\PlaceOrderController;
 use Controller\UserController;
+use Core\App;
+use Core\Autoloader;
 use Request\DeleteProductRequest;
 use Request\LoginRequest;
 use Request\MinusProductRequest;
@@ -12,7 +14,7 @@ use Request\PlaceOrderFormRequest;
 use Request\PlusProductRequest;
 use Request\RegistrationRequest;
 
-require_once './../Autoloader.php';
+require_once './../Core/Autoloader.php';
 
 Autoloader::registrate(dirname(__DIR__));
 

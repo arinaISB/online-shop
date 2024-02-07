@@ -1,13 +1,13 @@
 <?php
 
 namespace Controller;
+use Core\Service\Authentication\AuthenticationInterface;
 use Exception;
 use Exceptions\UserNotFoundExceptions;
 use Model\Cart;
 use Model\CartProduct;
 use Request\MinusProductRequest;
 use Request\PlusProductRequest;
-use Service\AuthenticationInterface;
 
 class CartProductController
 {

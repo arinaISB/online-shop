@@ -2,13 +2,13 @@
 
 namespace Controller;
 
+use Core\Service\Authentication\AuthenticationInterface;
 use Exception;
 use Exceptions\UserNotFoundExceptions;
 use Model\Cart;
 use Model\CartProduct;
 use Request\DeleteProductRequest;
 use Resource\CartResource;
-use Service\AuthenticationInterface;
 
 class CartController
 {
@@ -45,13 +45,8 @@ class CartController
         }
 
         $productsInCart = CartProduct::getAllByCartId($cart->getId());
-
-        if (empty($productsInCart))
-        {
-            throw new Exception('Cart is empty');
-        }
-
         $viewData = CartResource::format($cart);
+
         require_once './../View/cart.php';
     }
 

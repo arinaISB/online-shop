@@ -2,6 +2,7 @@
 
 namespace Controller;
 
+use Core\Service\Authentication\AuthenticationInterface;
 use Exception;
 use Exceptions\UserNotFoundExceptions;
 use Model\Cart;
@@ -9,7 +10,6 @@ use Model\CartProduct;
 use Model\PlacedOrder;
 use Request\PlaceOrderFormRequest;
 use Resource\CartResource;
-use Service\AuthenticationInterface;
 use Service\OrderService;
 
 class PlaceOrderController
@@ -23,6 +23,9 @@ class PlaceOrderController
         $this->orderService = new OrderService();
     }
 
+    /**
+     * @throws Exception
+     */
     public function getPlaceOrderForm(): void
     {
         if (!$this->authenticationService->check())
@@ -77,11 +80,6 @@ class PlaceOrderController
         }
 
         $productsInCart = CartProduct::getAllByCartId($cart->getId());
-
-        if (empty($productsInCart))
-        {
-            throw new Exception('Cart is empty');
-        }
 
         $viewData = CartResource::format($cart);
 

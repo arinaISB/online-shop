@@ -1,1 +1,7 @@
 2024-02-06 14:41:26Message: Invalid email address provided: katya@gmail.com, Code: 0, File: /var/www/html/app/Controller/UserController.php, Line: 39
+2024-02-07 10:12:23 Message: Cart is empty, Code: 0, File: /var/www/html/app/Controller/CartController.php, Line: 51
+2024-02-07 10:12:27 Message: Cart is empty, Code: 0, File: /var/www/html/app/Controller/CartController.php, Line: 51
+2024-02-07 10:12:33 Message: Cart is empty, Code: 0, File: /var/www/html/app/Controller/PlaceOrderController.php, Line: 83
+2024-02-07 10:12:47 Message: Cart is empty, Code: 0, File: /var/www/html/app/Controller/PlaceOrderController.php, Line: 83
+2024-02-07 10:13:12 Message: Cart is empty, Code: 0, File: /var/www/html/app/Controller/PlaceOrderController.php, Line: 83
+2024-02-07 10:15:12 Message: Cart is empty, Code: 0, File: /var/www/html/app/Controller/CartController.php, Line: 51

@@ -1,6 +1,6 @@
 <?php
 
-namespace Service;
+namespace Core\Service\Authentication;
 
 use Exceptions\UserNotFoundExceptions;
 use Model\User;

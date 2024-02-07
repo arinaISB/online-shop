@@ -2,8 +2,7 @@
 
 namespace Request;
 
-use Model\User;
-use Service\SessionAuthenticationService;
+use Core\Request\Request;
 
 class LoginRequest extends Request
 {

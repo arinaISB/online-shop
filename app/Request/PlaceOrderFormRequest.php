@@ -2,6 +2,8 @@
 
 namespace Request;
 
+use Core\Request\Request;
+
 class PlaceOrderFormRequest extends Request
 {
     public function validate(): array

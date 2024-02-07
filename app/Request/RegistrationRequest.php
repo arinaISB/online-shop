@@ -2,6 +2,7 @@
 
 namespace Request;
 
+use Core\Request\Request;
 use Model\User;
 
 class RegistrationRequest extends Request

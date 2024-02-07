@@ -1,8 +1,11 @@
 <?php
 
-use Request\Request;
-use Service\CookieAuthenticationService;
-use Service\LoggerService;
+namespace Core;
+
+use Core\Request\Request;
+use Core\Service\Authentication\CookieAuthenticationService;
+use Core\Service\LoggerService;
+use Throwable;
 
 class App
 {

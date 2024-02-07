@@ -2,6 +2,8 @@
 
 namespace Request;
 
+use Core\Request\Request;
+
 class PlusProductRequest extends Request
 {
     public function validate(): array

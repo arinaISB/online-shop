@@ -2,6 +2,8 @@
 
 namespace Model;
 
+use Core\Model\Model;
+
 class CartProduct extends Model
 {
     protected ?int $id;

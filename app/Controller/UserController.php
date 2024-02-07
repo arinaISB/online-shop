@@ -2,11 +2,11 @@
 
 namespace Controller;
 
+use Core\Service\Authentication\AuthenticationInterface;
 use Exception;
 use Model\User;
 use Request\LoginRequest;
 use Request\RegistrationRequest;
-use Service\AuthenticationInterface;
 
 class UserController
 {
