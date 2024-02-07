@@ -6,7 +6,7 @@ use Throwable;
 
 class LoggerService
 {
-    public static function logging(Throwable $exception): void
+    public static function error(Throwable $exception): void
     {
         $message = date('Y-m-d H:i:s') . ' ' .
             'Message: ' . $exception->getMessage() . ', ' .

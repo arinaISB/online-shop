@@ -31,8 +31,8 @@ class App
                 try {
                     $obj->$method($request);
                 } catch (Throwable $exception) {
-                    LoggerService::logging($exception);
-
+                    LoggerService::error($exception);
+//info метод
                     require_once './../View/500.php';
                 }
             } else {
