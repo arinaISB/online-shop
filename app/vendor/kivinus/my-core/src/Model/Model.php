@@ -1,6 +1,6 @@
 <?php
 
-namespace Core\src\Model;
+namespace Kivinus\MyCore\Model;
 use PDO;
 
 class Model

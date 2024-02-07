@@ -2,9 +2,9 @@
 
 namespace Kivinus\MyCore;
 
-use Core\src\Request\Request;
-use Core\src\Service\Authentication\CookieAuthenticationService;
-use Core\src\Service\LoggerService;
+use Kivinus\MyCore\Request\Request;
+use Kivinus\MyCore\Service\Authentication\CookieAuthenticationService;
+use Kivinus\MyCore\Service\LoggerService;
 use Throwable;
 
 class App

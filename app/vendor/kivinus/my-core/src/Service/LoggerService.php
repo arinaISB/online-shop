@@ -1,6 +1,6 @@
 <?php
 
-namespace Core\src\Service;
+namespace Kivinus\MyCore\Service;
 use Throwable;
 
 class LoggerService

@@ -2,7 +2,7 @@
 
 namespace Model;
 
-use Core\Model\Model;
+use Kivinus\MyCore\Model\Model;
 
 class CartProduct extends Model
 {

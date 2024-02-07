@@ -2,7 +2,7 @@
 
 namespace Request;
 
-use Core\Request\Request;
+use Kivinus\MyCore\Request\Request;
 use Model\User;
 
 class RegistrationRequest extends Request

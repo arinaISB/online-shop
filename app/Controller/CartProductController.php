@@ -1,7 +1,7 @@
 <?php
 
 namespace Controller;
-use Core\Service\Authentication\AuthenticationInterface;
+use Kivinus\MyCore\Service\Authentication\AuthenticationInterface;
 use Exception;
 use Exceptions\UserNotFoundExceptions;
 use Model\Cart;

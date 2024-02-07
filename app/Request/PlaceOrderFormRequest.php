@@ -2,7 +2,7 @@
 
 namespace Request;
 
-use Core\Request\Request;
+use Kivinus\MyCore\Request\Request;
 
 class PlaceOrderFormRequest extends Request
 {

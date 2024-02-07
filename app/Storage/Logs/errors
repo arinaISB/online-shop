@@ -5,3 +5,7 @@
 2024-02-07 10:12:47 Message: Cart is empty, Code: 0, File: /var/www/html/app/Controller/PlaceOrderController.php, Line: 83
 2024-02-07 10:13:12 Message: Cart is empty, Code: 0, File: /var/www/html/app/Controller/PlaceOrderController.php, Line: 83
 2024-02-07 10:15:12 Message: Cart is empty, Code: 0, File: /var/www/html/app/Controller/CartController.php, Line: 51
+2024-02-07 19:41:40 Message: Class "Core\Model\Model" not found, Code: 0, File: /var/www/html/app/Model/Product.php, Line: 7
+2024-02-07 19:41:42 Message: Class "Core\Model\Model" not found, Code: 0, File: /var/www/html/app/Model/Product.php, Line: 7
+2024-02-07 19:41:42 Message: Class "Core\Model\Model" not found, Code: 0, File: /var/www/html/app/Model/Product.php, Line: 7
+2024-02-07 19:42:21 Message: Class "Core\Model\Model" not found, Code: 0, File: /var/www/html/app/Model/Product.php, Line: 7

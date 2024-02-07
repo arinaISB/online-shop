@@ -1,6 +1,6 @@
 <?php
 
-namespace Core\src\Service\Authentication;
+namespace Kivinus\MyCore\Service\Authentication;
 
 use Exceptions\UserNotFoundExceptions;
 use Model\User;

@@ -2,7 +2,7 @@
 
 namespace Controller;
 
-use Core\Service\Authentication\AuthenticationInterface;
+use Kivinus\MyCore\Service\Authentication\AuthenticationInterface;
 use Exception;
 use Model\User;
 use Request\LoginRequest;

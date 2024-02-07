@@ -1,6 +1,6 @@
 <?php
 
-namespace Core\src\Request;
+namespace Kivinus\MyCore\Request;
 
 class Request
 {

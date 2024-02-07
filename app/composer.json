@@ -1,5 +1,6 @@
 {
     "require": {
-        "kivinus/my-core": "dev-main"
+        "kivinus/my-core": "dev-main",
+      "ext-pdo": "*"
     }
 }
