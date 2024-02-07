@@ -1,0 +1,37 @@
+{
+    "packages": [
+        {
+            "name": "kivinus/my-core",
+            "version": "dev-main",
+            "version_normalized": "dev-main",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/arinaISB/my-core.git",
+                "reference": "6c9c59f582afb7e9bac8d0daaf6a567e806e9e25"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/arinaISB/my-core/zipball/6c9c59f582afb7e9bac8d0daaf6a567e806e9e25",
+                "reference": "6c9c59f582afb7e9bac8d0daaf6a567e806e9e25",
+                "shasum": ""
+            },
+            "time": "2024-02-07T12:40:04+00:00",
+            "default-branch": true,
+            "type": "library",
+            "installation-source": "dist",
+            "autoload": {
+                "psr-4": {
+                    "Kivinus\\MyCore\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "support": {
+                "issues": "https://github.com/arinaISB/my-core/issues",
+                "source": "https://github.com/arinaISB/my-core/tree/main"
+            },
+            "install-path": "../kivinus/my-core"
+        }
+    ],
+    "dev": true,
+    "dev-package-names": []
+}

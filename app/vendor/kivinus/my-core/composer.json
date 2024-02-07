@@ -1,0 +1,9 @@
+{
+    "name": "kivinus/my-core",
+    "autoload": {
+        "psr-4": {
+            "Kivinus\\MyCore\\": "src/"
+        }
+    },
+    "require": {}
+}

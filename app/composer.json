@@ -1,0 +1,5 @@
+{
+    "require": {
+        "kivinus/my-core": "dev-main"
+    }
+}
